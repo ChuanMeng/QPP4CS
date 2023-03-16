@@ -47,5 +47,14 @@ srun --time=99:00:00 -c16 --mem=250G python -u unsupervisedQPP/preretrieval_qpp.
 
 ## Perplexity
 
+```bash
+
+
+```
 
 ## PPL-QPP
+
+```bash
+
+
+```
