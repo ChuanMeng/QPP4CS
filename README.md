@@ -5,8 +5,8 @@ This is the repository for the paper entitled **Performance Prediction for Conve
 This repository allows the replication of all results reported in the paper.
 There are four steps:
 - [Precomputation](#Precomputation): some of the pre-retrieval QPP methods (VAR and PMI) need precomputation and
-- [Baselines](#Baselines)
-- [Perplexity](#Perplexity)
+- [Run Baselines](#Run-Baselines)
+- [Compute Perplexity](#Compute-Perplexity)
 - [PPL-QPP](#PPL-QPP)
 
 
@@ -34,7 +34,7 @@ srun --time=99:00:00 -c16 --mem=250G  python -u unsupervisedQPP/preretrieval_qpp
 --query_path_6 ./datasets/or-quac/queries/or-quac-dev.queries-manual.tsv \
 --index_path ./datasets/or-quac/index
 ```
-## Baselines
+## Run Baselines
 ```bash
 srun --time=99:00:00 -c16 --mem=250G python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode baselines \
@@ -67,7 +67,7 @@ srun --time=99:00:00 -c16 --mem=250G python -u unsupervisedQPP/preretrieval_qpp.
 --qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt
 ```
 
-## Perplexity
+## Compute Perplexity
 
 ```bash
 srun -p gpu --gres=gpu:1 --time=99:00:00 -c8 --mem=50G  python -u unsupervisedQPP/preretrieval_qpp.py \
@@ -103,11 +103,46 @@ srun --time=99:00:00 -c16 --mem=250G python -u unsupervisedQPP/preretrieval_qpp.
 --index_path ./datasets/or-quac/index \
 --qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt
 --LM gpt2-xl
+```
+
+```bash
+
+python -u evaluation_QPP.py \
+--pattern ./output/pre-retrieval/cast-19.* \
+--ap_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-T5-Q-bm25-1000.json
 ```
 
 ## PPL-QPP
 
 ```bash
+srun -p gpu --gres=gpu:1 --time=99:00:00 -c8 --mem=50G  python -u unsupervisedQPP/preretrieval_qpp.py \
+--mode PPL-QPP \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt
+--LM gpt2-xl
+--qpp_name VAR-var-sum
+--alpha
+```
 
+```bash
+srun -p gpu --gres=gpu:1 --time=99:00:00 -c8 --mem=50G  python -u unsupervisedQPP/preretrieval_qpp.py \
+--mode PPL-QPP \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt
+--LM gpt2-xl
+--qpp_name SCQ-avg
+--alpha
+```
 
+```bash
+srun --time=99:00:00 -c16 --mem=250G python -u unsupervisedQPP/preretrieval_qpp.py \
+--mode PPL-QPP \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt
+--LM gpt2-xl
+--qpp_name VAR-var-sum
+--alpha
 ```
