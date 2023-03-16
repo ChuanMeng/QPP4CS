@@ -2,6 +2,15 @@
 
 This is the repository for the paper entitled **Performance Prediction for Conversational Search Using Perplexities of Query Rewrites**.
 
+This repository allows the replication of all results reported in the paper.
+There are four steps:
+- [Precomputation](#Precomputation): some of the pre-retrieval QPP methods (VAR and PMI) need precomputation and
+- [Baselines](#Baselines)
+- [Perplexity](#Perplexity)
+- [PPL-QPP](#PPL-QPP)
+
+
+## Precomputation
 ```bash
 srun --time=99:00:00 -c16 --mem=250G  python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode precomputation \
@@ -25,7 +34,7 @@ srun --time=99:00:00 -c16 --mem=250G  python -u unsupervisedQPP/preretrieval_qpp
 --query_path_6 ./datasets/or-quac/queries/or-quac-dev.queries-manual.tsv \
 --index_path ./datasets/or-quac/index
 ```
-
+## Baselines
 ```bash
 srun --time=99:00:00 -c16 --mem=250G python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode baselines \
@@ -35,3 +44,8 @@ srun --time=99:00:00 -c16 --mem=250G python -u unsupervisedQPP/preretrieval_qpp.
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-T5-Q-bm25-1000.json \
 --target_metric ndcg@3
 ```
+
+## Perplexity
+
+
+## PPL-QPP
