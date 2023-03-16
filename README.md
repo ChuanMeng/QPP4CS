@@ -146,3 +146,15 @@ srun --time=99:00:00 -c16 --mem=250G python -u unsupervisedQPP/preretrieval_qpp.
 --qpp_name VAR-var-sum
 --alpha
 ```
+
+## Citation
+Please cite our paper if you think this repository is helpful: 
+```
+@inproceedings{
+xx
+}
+```
+
+## Question
+Feel free to contact Chuan Meng (c.meng AT uva.nl) if you have any questions. 
+
