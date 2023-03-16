@@ -40,9 +40,31 @@ srun --time=99:00:00 -c16 --mem=250G python -u unsupervisedQPP/preretrieval_qpp.
 --mode baselines \
 --query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
 --index_path ./datasets/cast-19-20/index \
---qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
---actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-T5-Q-bm25-1000.json \
---target_metric ndcg@3
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt
+```
+
+```bash
+srun --time=99:00:00 -c16 --mem=250G python -u unsupervisedQPP/preretrieval_qpp.py \
+--mode baselines \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt
+```
+
+```bash
+srun --time=99:00:00 -c16 --mem=250G python -u unsupervisedQPP/preretrieval_qpp.py \
+--mode baselines \
+--query_path ./datasets/or-quac/queries/or-quac-dev.queries-T5-Q.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt
+```
+
+```bash
+srun --time=99:00:00 -c16 --mem=250G python -u unsupervisedQPP/preretrieval_qpp.py \
+--mode baselines \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt
 ```
 
 ## Perplexity
