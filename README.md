@@ -105,34 +105,28 @@ srun --time=99:00:00 -c16 --mem=250G python -u unsupervisedQPP/preretrieval_qpp.
 --LM gpt2-xl
 ```
 
-```bash
-
-python -u evaluation_QPP.py \
---pattern ./output/pre-retrieval/cast-19.* \
---ap_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-T5-Q-bm25-1000.json
-```
 
 ## PPL-QPP
 
 ```bash
-srun -p gpu --gres=gpu:1 --time=99:00:00 -c8 --mem=50G  python -u unsupervisedQPP/preretrieval_qpp.py \
+srun --time=99:00:00 -c16 --mem=250G python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode PPL-QPP \
 --query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
 --index_path ./datasets/cast-19-20/index \
---qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt
---LM gpt2-xl
---qpp_name VAR-var-sum
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--LM gpt2-xl \
+--qpp_names VAR-std-sum VAR-std-avg \
 --alpha
 ```
 
 ```bash
-srun -p gpu --gres=gpu:1 --time=99:00:00 -c8 --mem=50G  python -u unsupervisedQPP/preretrieval_qpp.py \
+srun --time=99:00:00 -c16 --mem=250G python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode PPL-QPP \
 --query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
 --index_path ./datasets/cast-19-20/index \
---qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt
---LM gpt2-xl
---qpp_name SCQ-avg
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--LM gpt2-xl \
+--qpp_names SCQ-avg \
 --alpha
 ```
 
@@ -143,9 +137,35 @@ srun --time=99:00:00 -c16 --mem=250G python -u unsupervisedQPP/preretrieval_qpp.
 --index_path ./datasets/or-quac/index \
 --qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt
 --LM gpt2-xl
---qpp_name VAR-var-sum
+--qpp_names VAR-std-sum
 --alpha
 ```
+
+
+```bash
+python -u evaluation_QPP.py \
+--pattern './output/pre-retrieval/cast-19.*' \
+--ap_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-T5-Q-bm25-1000.json
+```
+
+```bash
+python -u evaluation_QPP.py \
+--pattern './output/pre-retrieval/cast-20.*' \
+--ap_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-T5-QA-bm25-1000.json
+```
+
+```bash
+python -u evaluation_QPP.py \
+--pattern './output/pre-retrieval/or-quac-dev.*' \
+--ap_path ./datasets/or-quac/actual_performance/or-quac-dev.actual-performance-run-T5-Q-bm25-1000.json
+```
+
+```bash
+python -u evaluation_QPP.py \
+--pattern './output/pre-retrieval/or-quac-test.*' \
+--ap_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-T5-Q-bm25-1000.json
+```
+
 
 ## Citation
 Please cite our paper if you think this repository is helpful: 
