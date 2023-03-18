@@ -2,13 +2,15 @@
 
 This is the repository for the paper **Performance Prediction for Conversational Search Using Perplexities of Query Rewrites**.
 In order to replicate the results reported in the paper, please follow four steps:
-- [Precomputation](#Precomputation): some of the pre-retrieval QPP methods (VAR and PMI) need precomputation and
+- [Precomputation](#Precomputation):
 - [Run Baselines](#Run-Baselines)
 - [Compute Perplexity](#Compute-Perplexity)
-- [PPL-QPP](#PPL-QPP)
+- [Run PPL-QPP](# Run-PPL-QPP)
 
 
 ## Precomputation
+
+Some of the pre-retrieval QPP methods (VAR and PMI) need precomputation and
 ```bash
 python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode precomputation \
@@ -16,7 +18,6 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 --query_path_2 ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
 --index_path ./datasets/cast-19-20/index
 ```
-
 ```bash
 python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode precomputation \
@@ -25,6 +26,8 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 --index_path ./datasets/or-quac/index
 ```
 ## Run Baselines
+
+
 ```bash
 python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode baselines \
@@ -96,7 +99,7 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 ```
 
 
-## PPL-QPP
+## Run PPL-QPP
 
 Alpha 
 
