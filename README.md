@@ -1,11 +1,12 @@
 # QPP4CS
 
 This is the repository for the paper **Performance Prediction for Conversational Search Using Perplexities of Query Rewrites**.
-In order to replicate the results reported in the paper, please follow four steps:
+In order to replicate the results reported in the paper, please follow the following five steps:
 - [Precomputation](#Precomputation):
 - [Run Baselines](#Run-Baselines)
 - [Compute Perplexity](#Compute-Perplexity)
-- [Run PPL-QPP](# Run PPL-QPP)
+- [Run-PPL-QPP](#Run PPL-QPP)
+- [Evaluation] (#Evaluation) 
 
 
 ## Precomputation
@@ -78,7 +79,6 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 The output files would be saved in the folder `./output/pre-retrieval/**`. 
 
 ## Run PPL-QPP
-
 Run the following commands to run PPL-QPP on the CAsT-19, CAsT-20 and the test set of the OR-QUAC datasets:
 ```bash
 python -u unsupervisedQPP/preretrieval_qpp.py \
@@ -111,8 +111,8 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 ```
 The output files of baselines would be saved in the folder `./output/pre-retrieval/**`.
 
-
-Lastly, run the following commands to evaluate all baselines and PPL-QPP:
+## Run PPL-QPP
+Lastly, run the following commands to evaluate all baselines and PPL-QPP in terms of Pearson, Kendall, and Spearman correlation coefficients:
 ```bash
 python -u evaluation_QPP.py \
 --pattern './output/pre-retrieval/cast-19.*' \
@@ -134,7 +134,7 @@ The files showing the evaluation results would be saved in the folder `./output/
 ## Citation
 Please cite our paper if you think this repository is helpful: 
 ```
-@inproceedings{chuan2023,
+@inproceedings{chuan2023Performance,
  author = {Meng, Chuan and Aliannejadi, Mohammad and de Rijke, Maarten},
  booktitle = {QPP++ 2023: Query Performance Prediction and Its Evaluation in New Tasks},
  title = {Performance Prediction for Conversational Search Using Perplexities of Query Rewrites},
