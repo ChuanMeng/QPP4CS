@@ -9,8 +9,8 @@ In order to replicate the results reported in the paper, please follow four step
 
 
 ## Precomputation
-
-Some of the pre-retrieval QPP methods (VAR and PMI) need precomputation and
+Some of the pre-retrieval QPP methods (VAR and PMI) would take a very long time to run. In order to reduce the time consumption, we first conduct precomputation on the two collections.
+CAsT-19 and CAsT-20 share the same collection. Run the following command to do precomputation on the shared collection.
 ```bash
 python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode precomputation \
@@ -18,6 +18,7 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 --query_path_2 ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
 --index_path ./datasets/cast-19-20/index
 ```
+Run the following command to do precomputation on the collection of OR-QUAC.
 ```bash
 python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode precomputation \
@@ -27,7 +28,7 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 ```
 ## Run Baselines
 
-
+Run the following command to run baselines on the CAsT-19 dataset:
 ```bash
 python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode baselines \
@@ -36,6 +37,7 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 --qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt
 ```
 
+Run the following command to run baselines on the CAsT-20 dataset:
 ```bash
 python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode baselines \
@@ -44,14 +46,7 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 --qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt
 ```
 
-```bash
-python -u unsupervisedQPP/preretrieval_qpp.py \
---mode baselines \
---query_path ./datasets/or-quac/queries/or-quac-dev.queries-T5-Q.tsv \
---index_path ./datasets/or-quac/index \
---qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt
-```
-
+Run the following command to run baselines on the test set of the OR-QUAC dataset:
 ```bash
 python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode baselines \
