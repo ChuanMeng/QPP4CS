@@ -9,7 +9,8 @@ In order to replicate the results reported in the paper, please follow four step
 
 
 ## Precomputation
-Some of the pre-retrieval QPP methods (VAR and PMI) would take a very long time to run. In order to reduce the time consumption, we first conduct precomputation on the two collections. The files of precomputation would be saved in the folder **./output/pre-retrieval/**. 
+Some of the pre-retrieval QPP methods (VAR and PMI) would take a very long time to run. In order to reduce the time consumption, we first conduct precomputation on the two collections. 
+The files of precomputation would be saved in the folder `./output/pre-retrieval/`. 
 CAsT-19 and CAsT-20 share the same collection. Run the following command to do precomputation on the shared collection.
 ```bash
 python -u unsupervisedQPP/preretrieval_qpp.py \
@@ -47,7 +48,7 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 --index_path ./datasets/or-quac/index \
 --qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt
 ```
-The output files of baselines would be saved in the folder **./output/pre-retrieval/**. 
+The output files of baselines would be saved in the folder `./output/pre-retrieval/`. 
 
 ## Compute Perplexity
 
@@ -74,12 +75,11 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 --qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
 --LM gpt2-xl
 ```
-The output files of baselines would be saved in the folder **./output/pre-retrieval/**. 
+The output files would be saved in the folder `./output/pre-retrieval/**`. 
 
 ## Run PPL-QPP
 
-Alpha 
-
+Run the following commands to run PPL-QPP on the CAsT-19, CAsT-20 and the test set of the OR-QUAC datasets:
 ```bash
 python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode PPL-QPP \
@@ -89,9 +89,7 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 --LM gpt2-xl \
 --qpp_names VAR-std-sum \
 --alpha 0.1
-```
 
-```bash
 python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode PPL-QPP \
 --query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
@@ -100,9 +98,7 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 --LM gpt2-xl \
 --qpp_names SCQ-avg \
 --alpha 0.2
-```
 
-```bash
 python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode PPL-QPP \
 --query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
@@ -113,29 +109,27 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 --alpha 0
 
 ```
+The output files of baselines would be saved in the folder `./output/pre-retrieval/**`.
 
 
+Lastly, run the following commands to evaluate all baselines and PPL-QPP:
 ```bash
 python -u evaluation_QPP.py \
 --pattern './output/pre-retrieval/cast-19.*' \
 --ap_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-T5-Q-bm25-1000.json \
 --target_metrics ndcg@3
-```
 
-```bash
 python -u evaluation_QPP.py \
 --pattern './output/pre-retrieval/cast-20.*' \
 --ap_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-T5-QA-bm25-1000.json \
 --target_metrics ndcg@3
-```
 
-```bash
 python -u evaluation_QPP.py \
 --pattern './output/pre-retrieval/or-quac-test.*' \
 --ap_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-T5-Q-bm25-1000.json \
 --target_metrics ndcg@3
 ```
-
+The files showing the evaluation results would be saved in the folder `./output/pre-retrieval/**`.
 
 ## Citation
 Please cite our paper if you think this repository is helpful: 
