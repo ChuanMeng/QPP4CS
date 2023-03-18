@@ -2,11 +2,18 @@
 
 This is the repository for the paper **Performance Prediction for Conversational Search Using Perplexities of Query Rewrites**.
 In order to replicate the results reported in the paper, please follow the following five steps:
+- [Prerequisites](#Prerequisites)
 - [Precomputation](#Precomputation)
 - [Run Baselines](#Run-Baselines)
 - [Compute Perplexity](#Compute-Perplexity)
 - [Run PPL-QPP](#Run-PPL-QPP)
 - [Evaluation](#Evaluation) 
+
+## Prerequisites
+Install dependencies:  
+```bash
+pip install -r requirements.txt
+```
 
 ## Precomputation
 Some of the pre-retrieval QPP methods (VAR and PMI) would take a very long time to run. In order to reduce the time consumption, we first conduct precomputation on the two collections. 

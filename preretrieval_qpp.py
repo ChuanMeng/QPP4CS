@@ -5,7 +5,6 @@ from pyserini.index import IndexReader
 from pyserini.search.lucene import LuceneSearcher
 import json
 import string
-from nltk.tokenize import word_tokenize
 from collections import Counter
 import re
 import numpy as np
