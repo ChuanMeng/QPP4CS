@@ -5,8 +5,8 @@ In order to replicate the results reported in the paper, please follow the follo
 - [Precomputation](#Precomputation):
 - [Run Baselines](#Run-Baselines)
 - [Compute Perplexity](#Compute-Perplexity)
-- [Run-PPL-QPP](#Run PPL-QPP)
-- [Evaluation] (#Evaluation) 
+- [Run-PPL-QPP](#Run-PPL-QPP)
+- [Evaluation](#Evaluation) 
 
 
 ## Precomputation
@@ -109,7 +109,7 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 --alpha 0
 
 ```
-The output files of baselines would be saved in the folder `./output/pre-retrieval/**`.
+The output files of PPL-QPP would be saved in the folder `./output/pre-retrieval/**`.
 
 ## Run PPL-QPP
 Lastly, run the following commands to evaluate all baselines and PPL-QPP in terms of Pearson, Kendall, and Spearman correlation coefficients:
