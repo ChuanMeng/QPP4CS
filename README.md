@@ -170,8 +170,11 @@ python -u evaluation_QPP.py \
 ## Citation
 Please cite our paper if you think this repository is helpful: 
 ```
-@inproceedings{
-xx
+@inproceedings{chuan2023,
+ author = {Meng, Chuan and Aliannejadi, Mohammad and de Rijke, Maarten},
+ booktitle = {QPP++ 2023: Query Performance Prediction and Its Evaluation in New Tasks},
+ title = {Performance Prediction for Conversational Search Using Perplexities of Query Rewrites},
+ year = {2023}
 }
 ```
 
