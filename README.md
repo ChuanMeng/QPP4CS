@@ -14,6 +14,7 @@ Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
+The query rewrite files and collection files for CAsT-19, CAsT-20 and OR-QUAC will come soon.
 
 ## Precomputation
 Some of the pre-retrieval QPP methods (VAR and PMI) would take a very long time to run. In order to reduce the time consumption, we first conduct precomputation on the two collections. 
