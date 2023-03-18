@@ -35,13 +35,11 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 --index_path ./datasets/cast-19-20/index \
 --qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt
 
-
 python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode baselines \
 --query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
 --index_path ./datasets/cast-19-20/index \
 --qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt
-```
 
 python -u unsupervisedQPP/preretrieval_qpp.py \
 --mode baselines \
