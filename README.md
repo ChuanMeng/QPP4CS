@@ -5,7 +5,7 @@ In order to replicate the results reported in the paper, please follow the follo
 - [Precomputation](#Precomputation):
 - [Run Baselines](#Run-Baselines)
 - [Compute Perplexity](#Compute-Perplexity)
-- [Run-PPL-QPP](#Run-PPL-QPP)
+- [Run PPL-QPP](#Run-PPL-QPP)
 - [Evaluation](#Evaluation) 
 
 
