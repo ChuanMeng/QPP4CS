@@ -14,7 +14,7 @@ Some of the pre-retrieval QPP methods (VAR and PMI) would take a very long time 
 The files of precomputation would be saved in the folder `./output/pre-retrieval/`. 
 CAsT-19 and CAsT-20 share the same collection. Run the following command to do precomputation on the shared collection.
 ```bash
-python -u unsupervisedQPP/preretrieval_qpp.py \
+python -u preretrieval_qpp.py \
 --mode precomputation \
 --query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
 --query_path_2 ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
@@ -22,7 +22,7 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 ```
 Run the following command to do precomputation on the collection of OR-QUAC.
 ```bash
-python -u unsupervisedQPP/preretrieval_qpp.py \
+python -u preretrieval_qpp.py \
 --mode precomputation \
 --query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
 --query_path_2 ./datasets/or-quac/queries/or-quac-dev.queries-T5-Q.tsv \
@@ -31,19 +31,19 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 ## Run Baselines
 Run the following commands to run baselines on the CAsT-19, CAsT-20 and the test set of the OR-QUAC datasets:
 ```bash
-python -u unsupervisedQPP/preretrieval_qpp.py \
+python -u preretrieval_qpp.py \
 --mode baselines \
 --query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
 --index_path ./datasets/cast-19-20/index \
 --qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt
 
-python -u unsupervisedQPP/preretrieval_qpp.py \
+python -u preretrieval_qpp.py \
 --mode baselines \
 --query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
 --index_path ./datasets/cast-19-20/index \
 --qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt
 
-python -u unsupervisedQPP/preretrieval_qpp.py \
+python -u preretrieval_qpp.py \
 --mode baselines \
 --query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
 --index_path ./datasets/or-quac/index \
@@ -55,21 +55,21 @@ The output files of baselines would be saved in the folder `./output/pre-retriev
 
 Run the following commands to compute the perplexities of query rewrites on the CAsT-19, CAsT-20 and the test set of the OR-QUAC datasets:
 ```bash
-python -u unsupervisedQPP/preretrieval_qpp.py \
+python -u preretrieval_qpp.py \
 --mode ppl \
 --query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
 --index_path ./datasets/cast-19-20/index \
 --qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
 --LM gpt2-xl
 
-python -u unsupervisedQPP/preretrieval_qpp.py \
+python -u preretrieval_qpp.py \
 --mode ppl \
 --query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
 --index_path ./datasets/cast-19-20/index \
 --qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
 --LM gpt2-xl
 
-python -u unsupervisedQPP/preretrieval_qpp.py \
+python -u preretrieval_qpp.py \
 --mode ppl \
 --query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
 --index_path ./datasets/or-quac/index \
@@ -81,7 +81,7 @@ The output files would be saved in the folder `./output/pre-retrieval/**`.
 ## Run PPL-QPP
 Run the following commands to run PPL-QPP on the CAsT-19, CAsT-20 and the test set of the OR-QUAC datasets:
 ```bash
-python -u unsupervisedQPP/preretrieval_qpp.py \
+python -u preretrieval_qpp.py \
 --mode PPL-QPP \
 --query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
 --index_path ./datasets/cast-19-20/index \
@@ -90,7 +90,7 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 --qpp_names VAR-std-sum \
 --alpha 0.1
 
-python -u unsupervisedQPP/preretrieval_qpp.py \
+python -u preretrieval_qpp.py \
 --mode PPL-QPP \
 --query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
 --index_path ./datasets/cast-19-20/index \
@@ -99,7 +99,7 @@ python -u unsupervisedQPP/preretrieval_qpp.py \
 --qpp_names SCQ-avg \
 --alpha 0.2
 
-python -u unsupervisedQPP/preretrieval_qpp.py \
+python -u preretrieval_qpp.py \
 --mode PPL-QPP \
 --query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
 --index_path ./datasets/or-quac/index \
@@ -114,17 +114,17 @@ The output files of PPL-QPP would be saved in the folder `./output/pre-retrieval
 ## Run PPL-QPP
 Lastly, run the following commands to evaluate all baselines and PPL-QPP in terms of Pearson, Kendall, and Spearman correlation coefficients:
 ```bash
-python -u evaluation_QPP.py \
+python -u evaluation_qpp.py \
 --pattern './output/pre-retrieval/cast-19.*' \
 --ap_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-T5-Q-bm25-1000.json \
 --target_metrics ndcg@3
 
-python -u evaluation_QPP.py \
+python -u evaluation_qpp.py \
 --pattern './output/pre-retrieval/cast-20.*' \
 --ap_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-T5-QA-bm25-1000.json \
 --target_metrics ndcg@3
 
-python -u evaluation_QPP.py \
+python -u evaluation_qpp.py \
 --pattern './output/pre-retrieval/or-quac-test.*' \
 --ap_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-T5-Q-bm25-1000.json \
 --target_metrics ndcg@3

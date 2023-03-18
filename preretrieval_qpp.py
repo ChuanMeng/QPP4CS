@@ -11,11 +11,10 @@ import re
 import numpy as np
 import argparse
 import math
-from evaluation_QPP import evaluation
+from evaluation_qpp import evaluation
 import pytrec_eval
 from evaluate import load
 import os
-from utils import data_split
 from scipy.stats import pearsonr
 
 def IDF(term, index_reader):
