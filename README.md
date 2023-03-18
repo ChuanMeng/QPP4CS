@@ -1,7 +1,7 @@
 # QPP4CS
 
 This is the repository for the paper **Performance Prediction for Conversational Search Using Perplexities of Query Rewrites**.
-In order to replicate the results reported in the paper, please follow the following five steps:
+In order to replicate the results reported in the paper, please follow the following six steps:
 - [Prerequisites](#Prerequisites)
 - [Precomputation](#Precomputation)
 - [Run Baselines](#Run-Baselines)
