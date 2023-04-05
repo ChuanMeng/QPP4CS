@@ -143,10 +143,12 @@ Please cite our paper if you think this repository is helpful:
 ```
 @inproceedings{chuan2023Performance,
  author = {Meng, Chuan and Aliannejadi, Mohammad and de Rijke, Maarten},
- booktitle = {QPP++ 2023: Query Performance Prediction and Its Evaluation in New Tasks},
+ booktitle = {Proceedings of the The QPP++ 2023: Query Performance Prediction and Its Evaluation in New Tasks Workshop co-located with The 45th European Conference on Information Retrieval},
  title = {Performance Prediction for Conversational Search Using Perplexities of Query Rewrites},
- year = {2023}
+ pages = {25--28},
+ url = {http://ceur-ws.org/Vol-3366/#paper-05},
 }
+
 ```
 
 ## Question
