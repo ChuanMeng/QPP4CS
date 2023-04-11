@@ -1,5 +1,5 @@
 # QPP4CS
-https://visitor-badge.glitch.me/badge?page_id=AGI-Edgerunners/QPP4CS
+![visitors](https://visitor-badge.glitch.me/badge?page_id=AGI-Edgerunners/QPP4CS)
 
 This is the repository for the paper **Performance Prediction for Conversational Search Using Perplexities of Query Rewrites**.
 In order to replicate the results in the paper, kindly adhere to the subsequent steps:
