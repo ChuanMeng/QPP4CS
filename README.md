@@ -300,7 +300,7 @@ Through the above command, we get the actual performance file **or-quac-train.ac
 ### Pre-retrieval QPP methods
 #### Precomputation
 Some of the pre-retrieval QPP methods (VAR and PMI) would take a very long time to run. In order to reduce the time consumption, we first conduct precomputation on the two collections. 
-The files of precomputation would be saved in the folder `./output/pre-retrieval/`. 
+The files of precomputation would be saved in the path `./output/pre-retrieval/`. 
 CAsT-19 and CAsT-20 share the same collection. Run the following command to do precomputation on the shared collection.
 ```bash
 python -u preretrieval_qpp.py \
@@ -317,8 +317,8 @@ python -u preretrieval_qpp.py \
 --query_path_2 ./datasets/or-quac/queries/or-quac-dev.queries-T5-Q.tsv \
 --index_path ./datasets/or-quac/index
 ```
-#### Run Baselines
-Run the following commands to run baselines on the CAsT-19, CAsT-20 and the test set of the OR-QUAC datasets:
+#### Computation
+Run the following commands to run pre-retrieval QPP methods (QS, SCS, avgICTF, IDF, PMI, SCQ, VAR) on the CAsT-19, CAsT-20 and the test set of the OR-QUAC datasets:
 ```bash
 python -u preretrieval_qpp.py \
 --mode baselines \
@@ -338,11 +338,10 @@ python -u preretrieval_qpp.py \
 --index_path ./datasets/or-quac/index \
 --qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt
 ```
-The output files of baselines would be saved in the folder `./output/pre-retrieval/`. 
+The output files of these methods would be saved in the path `./output/pre-retrieval/`. 
 
 ### Perplexity-based pre-retrieval QPP framework
-#### Compute Perplexity
-
+#### Perplexity Computation
 Run the following commands to compute the perplexities of query rewrites on the CAsT-19, CAsT-20 and the test set of the OR-QUAC datasets:
 ```bash
 python -u preretrieval_qpp.py \
@@ -366,10 +365,10 @@ python -u preretrieval_qpp.py \
 --qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
 --LM gpt2-xl
 ```
-The output files would be saved in the folder `./output/pre-retrieval/**`. 
+The output files would be saved in the path `./output/pre-retrieval/`. 
 
-#### Run PPL-QPP
-Run the following commands to run PPL-QPP on the CAsT-19, CAsT-20 and the test set of the OR-QUAC datasets:
+#### Perplexity-based Pre-retrieval QPP framework
+Run the following commands to run the Perplexity-based pre-retrieval QPP framework (PPL-QPP) on the CAsT-19, CAsT-20 and the test set of the OR-QUAC datasets:
 ```bash
 python -u preretrieval_qpp.py \
 --mode PPL-QPP \
@@ -399,10 +398,10 @@ python -u preretrieval_qpp.py \
 --alpha 0
 
 ```
-The output files of PPL-QPP would be saved in the folder `./output/pre-retrieval/**`.
+The output files of PPL-QPP would be saved in the path `./output/pre-retrieval/`.
 
 ### Evaluation for pre-retrieval QPP methods
-Run the following commands to evaluate all pre-retrieval QPP methods and PPL-QPP in terms of Pearson, Kendall, and Spearman correlation coefficients, for estimating the retrieval quality of T5+BM25:
+Run the following commands to evaluate all pre-retrieval QPP methods and PPL-QPP for estimating the retrieval quality (nDCG@3) of T5+BM25 in terms of Pearson, Kendall, and Spearman correlation coefficients:
 ```bash
 python -u evaluation_QPP.py \
 --pattern './output/pre-retrieval/cast-19.*' \
@@ -419,9 +418,10 @@ python -u evaluation_QPP.py \
 --ap_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-T5-Q-bm25-1000.json \
 --target_metrics ndcg@3
 ```
-The files showing the evaluation results would be saved in the folder `./output/pre-retrieval/**`.
+The files showing the evaluation results would be saved in the path `./output/pre-retrieval/`.
 
 ### Post-retrieval unsupervised QPP methods
+
 
 ### Post-retrieval supervised QPP methods
 
