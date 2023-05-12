@@ -303,66 +303,74 @@ Some of the pre-retrieval QPP methods (VAR and PMI) would take a very long time 
 The files of precomputation would be saved in the path `./output/pre-retrieval/`. 
 CAsT-19 and CAsT-20 share the same collection. Run the following command to do precomputation on the shared collection.
 ```bash
-python -u preretrieval_qpp.py \
+python -u ./unsupervisedQPP/pre_retrieval.py \
 --mode precomputation \
 --query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
 --query_path_2 ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
---index_path ./datasets/cast-19-20/index
+--index_path ./datasets/cast-19-20/index \
+--output_path ./output/pre-retrieval
 ```
 Run the following command to do precomputation on the collection of OR-QUAC.
 ```bash
-python -u preretrieval_qpp.py \
+python -u ./unsupervisedQPP/pre_retrieval.py \
 --mode precomputation \
 --query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
 --query_path_2 ./datasets/or-quac/queries/or-quac-dev.queries-T5-Q.tsv \
---index_path ./datasets/or-quac/index
+--index_path ./datasets/or-quac/index \
+--output_path ./output/pre-retrieval
 ```
 #### Computation
 Run the following commands to run pre-retrieval QPP methods (QS, SCS, avgICTF, IDF, PMI, SCQ, VAR) on the CAsT-19, CAsT-20 and the test set of the OR-QUAC datasets:
 ```bash
-python -u preretrieval_qpp.py \
+python -u ./unsupervisedQPP/pre_retrieval.py \
 --mode baselines \
 --query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
 --index_path ./datasets/cast-19-20/index \
---qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--output_path ./output/pre-retrieval
 
-python -u preretrieval_qpp.py \
+python -u ./unsupervisedQPP/pre_retrieval.py \
 --mode baselines \
 --query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
 --index_path ./datasets/cast-19-20/index \
---qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--output_path ./output/pre-retrieval
 
-python -u preretrieval_qpp.py \
+python -u ./unsupervisedQPP/pre_retrieval.py \
 --mode baselines \
 --query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
 --index_path ./datasets/or-quac/index \
---qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--output_path ./output/pre-retrieval
 ```
-The output files of these methods would be saved in the path `./output/pre-retrieval/`. 
+The output files of these methods would be saved in the path `./output/pre-retrieval/`. The output file would include ```qid \t predicted performance``` per line.
 
 ### Perplexity-based pre-retrieval QPP framework
 #### Perplexity Computation
 Run the following commands to compute the perplexities of query rewrites on the CAsT-19, CAsT-20 and the test set of the OR-QUAC datasets:
 ```bash
-python -u preretrieval_qpp.py \
+python -u ./unsupervisedQPP/pre_retrieval.py \
 --mode ppl \
 --query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
 --index_path ./datasets/cast-19-20/index \
 --qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--output_path ./output/pre-retrieval \
 --LM gpt2-xl
 
-python -u preretrieval_qpp.py \
+python -u ./unsupervisedQPP/pre_retrieval.py \
 --mode ppl \
 --query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
 --index_path ./datasets/cast-19-20/index \
 --qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--output_path ./output/pre-retrieval \
 --LM gpt2-xl
 
-python -u preretrieval_qpp.py \
+python -u ./unsupervisedQPP/pre_retrieval.py \
 --mode ppl \
 --query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
 --index_path ./datasets/or-quac/index \
 --qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--output_path ./output/pre-retrieval \
 --LM gpt2-xl
 ```
 The output files would be saved in the path `./output/pre-retrieval/`. 
@@ -370,43 +378,45 @@ The output files would be saved in the path `./output/pre-retrieval/`.
 #### Perplexity-based Pre-retrieval QPP framework
 Run the following commands to run the Perplexity-based pre-retrieval QPP framework (PPL-QPP) on the CAsT-19, CAsT-20 and the test set of the OR-QUAC datasets:
 ```bash
-python -u preretrieval_qpp.py \
+python -u ./unsupervisedQPP/pre_retrieval.py \
 --mode PPL-QPP \
 --query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
 --index_path ./datasets/cast-19-20/index \
 --qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--output_path ./output/pre-retrieval \
 --LM gpt2-xl \
 --qpp_names VAR-std-sum \
 --alpha 0.1
 
-python -u preretrieval_qpp.py \
+python -u ./unsupervisedQPP/pre_retrieval.py \
 --mode PPL-QPP \
 --query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
 --index_path ./datasets/cast-19-20/index \
 --qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--output_path ./output/pre-retrieval \
 --LM gpt2-xl \
 --qpp_names SCQ-avg \
 --alpha 0.2
 
-python -u preretrieval_qpp.py \
+python -u ./unsupervisedQPP/pre_retrieval.py \
 --mode PPL-QPP \
 --query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
 --index_path ./datasets/or-quac/index \
 --qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--output_path ./output/pre-retrieval \
 --LM gpt2-xl \
 --qpp_names VAR-std-sum \
 --alpha 0
-
 ```
 The output files of PPL-QPP would be saved in the path `./output/pre-retrieval/`.
 
 ### Evaluation for pre-retrieval QPP methods
-Run the following commands to evaluate all pre-retrieval QPP methods and PPL-QPP for estimating the retrieval quality (nDCG@3) of T5+BM25 in terms of Pearson, Kendall, and Spearman correlation coefficients:
+Run the following commands to evaluate all pre-retrieval QPP methods and PPL-QPP for estimating the retrieval quality of T5+BM25 in terms of Pearson, Kendall, and Spearman correlation coefficients:
 ```bash
 python -u evaluation_QPP.py \
 --pattern './output/pre-retrieval/cast-19.*' \
 --ap_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-T5-Q-bm25-1000.json \
---target_metrics ndcg@3
+--target_metrics ndcg@3 # can be set to "ndcg@3", "ndcg@100" or "recall@100"
 
 python -u evaluation_QPP.py \
 --pattern './output/pre-retrieval/cast-20.*' \
@@ -418,377 +428,238 @@ python -u evaluation_QPP.py \
 --ap_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-T5-Q-bm25-1000.json \
 --target_metrics ndcg@3
 ```
-The files showing the evaluation results would be saved in the path `./output/pre-retrieval/`.
+```target_metric``` here can be set to "ndcg@3", "ndcg@100" or "recall@100". The files showing the evaluation results would be saved in the path `./output/pre-retrieval/`. 
 
 ### Post-retrieval unsupervised QPP methods
+The following is used to run the post-retrieval unsupervised QPP methods: Clarity, WIG, NQC, SMV, σ<sub>max</sub> and n(σσ<sub>x%</sub>).
 
-
-### Post-retrieval supervised QPP methods
-
-### Evaluation for post-retrieval QPP methods
-
-
-### Supervised-QPP-methods
-We elaborate on how to replicate the result of a supervised QPP method under a specific setting in our paper. 
-We consider three state-of-the-art supervised QPP methods, namely [NQAQPP](https://dl.acm.org/doi/abs/10.1145/3341981.3344249), [BERTQPP](https://dl.acm.org/doi/abs/10.1145/3459637.3482063) and [qppBERTPL](https://dl.acm.org/doi/abs/10.1145/3477495.3531821).
-Note that we recommend using GPU to execute the following commands.
-
-#### CAsT-19 and CAsT-20 (5-fold cross-validation)
-We conduct 5-fold cross-validation on CAsT-19 or CAsT-20.
-
-We show how to set up a model using an example of NQAQPP in the setting of estimating the retrieval quality of BM25 with T5-based query rewrites on CAsT-19 in terms of nDCG@3.
-Use the following commands to set up NQAQPP in the setting of estimating the retrieval quality of BM25 with T5-based query rewrites on CAsT-19 in terms of nDCG@3:
+#### Assessing BM25 on CAsT-19
+When assessing BM25, QPP methods and BM25 always share the same query rewrites. Use the following commands to estimate the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25 and human-written+BM25 on CAsT-19:
 ```bash
-export MODEL_TYPE=NQAQPP # can be set to "NQAQPP", "BERTQPP" or "qppBERTPL"
-export DATASET_CLASS=cast-19-20 # can be set to "cast-19-20" or "or-quac"
-export DATASET_NAME=cast-19 # can be set to "cast-19" or "cast-20" when DATASET_CLASS is "cast-19-20"; can be set to "or-quac-train", "or-quac-dev" and "or-quac-test" when DATASET_CLASS is "or-quac"
-export QUERY_TYPE=T5-Q # can be set to "T5-Q", "QuReTeC-Q" or "manual" when DATASET_NAME is "cast-19", "or-quac-dev" or "or-quac-test"; can be set to "T5-QA", "QuReTeC-QA" and "manual" when DATASET_NAME is "cast-20"; always set it as "manual" when DATASET_NAME is "or-quac-train"
-export RETRIEVER=T5-Q-bm25 # can be set to "T5-Q-bm25", "QuReTeC-Q-bm25", "manual-bm25" or "ConvDR" when DATASET_NAME is "cast-19", "or-quac-dev" or "or-quac-test"; can be set to "T5-QA-bm25", "QuReTeC-QA-bm25", "manual-bm25" or "ConvDR" when DATASET_NAME is "cast-20"; always set it as "manual-bm25" when DATASET_NAME is "or-quac-train"
-export TARGET_METRIC=ndcg@3 # can be set to "ndcg@3", "ndcg@100" or "recall@100"; This variable would not impact qppBERTPL during training.
+ python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-T5-Q-bm25-1000.txt \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--output_path ./output/post-retrieval/ 
 
-export MODEL_NAME=${DATASET_NAME}.${QUERY_TYPE}-${MODEL_TYPE}-${TARGET_METRIC}-${RETRIEVER} # remove `${TARGET_METRIC}` and get {DATASET_NAME}.${QUERY_TYPE}-${MODEL_TYPE}-${RETRIEVER} when running qppBERTPL that is independent to the target metric
-export OUTPUT_NAME=${DATASET_NAME}.${QUERY_TYPE}-${MODEL_TYPE}-${TARGET_METRIC}-${RETRIEVER} # remove `${TARGET_METRIC}` and get ${DATASET_NAME}.${QUERY_TYPE}-${MODEL_TYPE}-${RETRIEVER} when running qppBERTPL that is independent to the target metric
-export QUERY_PATH=./datasets/${DATASET_CLASS}/queries/${DATASET_NAME}.queries-${QUERY_TYPE}.tsv
-export RUN_PATH=./datasets/${DATASET_CLASS}/runs/${DATASET_NAME}.run-${RETRIEVER}-1000.txt
-export ACTUAL_PERFORMANCE_PATH=./datasets/${DATASET_CLASS}/actual_performance/${DATASET_NAME}.actual-performance-run-${RETRIEVER}-1000.json
-export INDEX_PATH=./datasets/${DATASET_CLASS}/index
-export QRELS_PATH=./datasets/${DATASET_CLASS}/qrels/${DATASET_NAME}.qrels.txt
-export EPOCH_NUM=10 
-```
-We mainly modify the following variables and one can change the setting to any case in our paper by modifying them: 
-- `MODEL_TYPE` means the supervised QPP method to be used, which can be set to "NQAQPP", "BERTQPP" or "qppBERTPL".
-- `DATASET_CLASS` means the category of the dataset to be used, which can be set to "cast-19-20" or "or-quac".
-- `DATASET_NAME` means the specific dataset on which training and inference will be conducted, which can be set to "cast-19" or "cast-20" if `DATASET_CLASS` is set to "cast-19-20", and which can be set to "or-quac-train", "or-quac-dev" and "or-quac-test" if `DATASET_CLASS` is set to "or-quac".
-- `QUERY_TYPE` means the query rewrite type to be fed into the QPP method, which can be set to "T5-Q", "QuReTeC-Q" or "manual" when `DATASET_NAME` is "cast-19", "or-quac-dev" or "or-quac-test", and can be set to "T5-QA", "QuReTeC-QA" and "manual" when `DATASET_NAME` is "cast-20". We always set `QUERY_TYPE` as "manual" when `DATASET_NAME` is "or-quac-train".
-- `RETRIEVER` means the retriever to be evaluated by the QPP method, which can be set to "T5-Q-bm25", "QuReTeC-Q-bm25", "manual-bm25" or "ConvDR" when `DATASET_NAME` is "cast-19", "or-quac-dev" or "or-quac-test", and can be set to "T5-QA-bm25", "QuReTeC-QA-bm25", "manual-bm25" or "ConvDR" when `DATASET_NAME` is "cast-20". We always set `RETRIEVER` as "manual-bm25" when `DATASET_NAME` is "or-quac-train". Note that please always make sure the QPP method and BM25 use the same query rewrite type when predicting the retrieval quality of BM25.
-- `TARGET_METRIC` means the IR metric in terms of which regression-based models (e.g., NQAQPP, BERTQPP) will learn to estimate the retrieval quality during training, which can be set to "ndcg@3", "ndcg@100" or "recall@100". Note that this variable will not influence qppBERTPL because it is a classification-based model and does not learn to approximate scores of a specific IR metric. Thus please remove `${TARGET_METRIC}` in `MODEL_NAME` and `OUTPUT_NAME` when running qppBERTP.
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-QuReTeC-Q.tsv \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-QuReTeC-Q-bm25-1000.txt \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--output_path ./output/post-retrieval/ 
 
-Use the following command to train NQAQPP using 5-fold cross-validation on CAsT-19 (with the `--cross_validate` flag on):
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-manual.tsv \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-manual-bm25-1000.txt \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--output_path ./output/post-retrieval/
 ```
-python -u supervisedQPP/${MODEL_TYPE}/main.py \
---model_name ${MODEL_NAME} \
---output_name ${OUTPUT_NAME} \
---dataset ${DATASET_NAME} \
---query_path ${QUERY_PATH} \
---index_path ${INDEX_PATH} \
---qrels_path ${QRELS_PATH} \
---run_path ${RUN_PATH} \
---actual_performance_path ${ACTUAL_PERFORMANCE_PATH} \
---target_metric ${TARGET_METRIC} \
---epoch_num ${EPOCH_NUM} \
---cross_validate \
---mode training # can be changed to "inference" after finishing the training
-```
-The training process will produce checkpoints over all epochs, which are stored in `./output/${MODEL_NAME}/checkpoint/`, namely `./output/cast-19.T5-Q-NQAQPP-ndcg@3-T5-Q-bm25/checkpoint/`.
+The output files of these methods would be saved in the path `./output/post-retrieval/`. The output file would include ```qid \t predicted performance``` per line.
 
-Next, set the flag `--mode` as `inference` and execute the above command again to conduct inference.
-The inference process produces predicted performance files over all epochs, which are stored in `./output/${MODEL_NAME}/`, namely `./output/cast-19.T5-Q-NQAQPP-ndcg@3-T5-Q-bm25/`.
+#### Assessing BM25 on CAsT-20
+Similarly, use the following commands to estimate the retrieval quality of BM25 with T5-based, QuReTeC-based and human-written query rewrites on CAsT-20:
+```bash
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-T5-QA-bm25-1000.txt \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--output_path ./output/post-retrieval/ 
 
-Use the following command to evaluate NQAQPP on CAsT-19 in terms of Pearson's 𝜌, Kendall's 𝜏, and Spearman's 𝜌 correlation coefficients:
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-QuReTeC-QA.tsv \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-QuReTeC-QA-bm25-1000.txt \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--output_path ./output/post-retrieval/
+
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-manual.tsv \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-manual-bm25-1000.txt \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--output_path ./output/post-retrieval/
 ```
-python -u evaluation_QPP.py --ap_path ${ACTUAL_PERFORMANCE_PATH} --pp_path output/${MODEL_NAME}/${OUTPUT_NAME} --epoch_num ${EPOCH_NUM} --target_metric ${TARGET_METRIC}
+#### Assessing BM25 on OR-QuAC
+Similarly, use the following commands to estimate the retrieval quality of BM25 with T5-based, QuReTeC-based and human-written query rewrites on the test set of OR-QuAC:
+```bash
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-T5-Q-bm25-1000.txt \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--output_path ./output/post-retrieval/
+
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-QuReTeC-Q.tsv \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-QuReTeC-Q-bm25-1000.txt \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--output_path ./output/post-retrieval/
+
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-manual.tsv \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-manual-bm25-1000.txt \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--output_path ./output/post-retrieval/ 
 ```
-The above command will generate a result file (`${OUTPUT_NAME}.${TARGET_METRIC}`, namely **cast-19.T5-Q-NQAQPP-ndcg@3-T5-Q-bm25.ndcg@3**) showing the correlation scores for all epochs, which is stored in `./output/${MODEL_NAME}/`, namely `./output/cast-19.T5-Q-NQAQPP-ndcg@3-T5-Q-bm25/`.
+#### Assessing ConvDR on CAsT-19
+ConvDR has a specially-trained query encoder to encode raw utterances. QPP methods designed for ad-hoc search do not have a special module to understand raw utterances.
+When estimating the retrieval quality of ConvDR, we consider three types of inputs to QPP methods, namely T5-based, QuReTeC-based and human-written query rewrites. Use the following commands to estimate the retrieval quality of ConvDR on CAsT-19:
+```bash
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-ConvDR-1000.txt \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--output_path ./output/post-retrieval/
+
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-QuReTeC-Q.tsv \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-ConvDR-1000.txt \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--output_path ./output/post-retrieval/
+
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-manual.tsv \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-ConvDR-1000.txt \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--output_path ./output/post-retrieval/ 
+```
+The output files of these methods would be saved in the path `./output/post-retrieval/`.
+
+#### Assessing ConvDR on CAsT-20
+Similarly, use the following commands to estimate the retrieval quality of ConvDR on CAsT-20:
+```bash
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--output_path ./output/post-retrieval/
+
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-QuReTeC-QA.tsv \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--output_path ./output/post-retrieval/
+
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-manual.tsv \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--output_path ./output/post-retrieval/ 
+```
+#### Assessing ConvDR on OR-QuAC
+Similarly, use the following commands to estimate the retrieval quality of BM25 with T5-based, QuReTeC-based and human-written query rewrites on the test set of OR-QuAC:
+```bash
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-ConvDR-1000.txt \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--output_path ./output/post-retrieval/ 
+
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-QuReTeC-Q.tsv \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-ConvDR-1000.txt \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--output_path ./output/post-retrieval/ 
+
+python -u unsupervisedQPP/post_retrieval.py \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-manual.tsv \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-ConvDR-1000.txt \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--output_path ./output/post-retrieval/ 
+```
+
+
+### Evaluation for Post-retrieval QPP Methods
+The following commands are about evaluating all post-retrieval QPP methods in terms of Pearson's 𝜌, Kendall's 𝜏, and Spearman's 𝜌 correlation coefficients.
+#### CAsT-19
+Use the following command to evaluate QPP methods when they estimate the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25, human-written query rewrites+BM25 and ConvDR on CAsT-19:
+```bash
+python -u evaluation_QPP.py \
+--pattern './output/post-retrieval/cast-19.T5-Q-bm25-1000.*' \
+--ap_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-T5-Q-bm25-1000.json \
+--target_metrics ndcg@3 # target_metric can be set to "ndcg@3", "ndcg@100" or "recall@100"
+
+python -u evaluation_QPP.py \
+--pattern './output/post-retrieval/cast-19.QuReTeC-Q-bm25-1000.*' \
+--ap_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-QuReTeC-Q-bm25-1000.json \
+--target_metrics ndcg@3
+
+python -u evaluation_QPP.py \
+--pattern './output/post-retrieval/cast-19.manual-bm25-1000.*' \
+--ap_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-manual-bm25-1000.json \
+--target_metrics ndcg@3
+
+python -u evaluation_QPP.py \
+--pattern './output/post-retrieval/cast-19.ConvDR-1000.*' \
+--ap_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-ConvDR-1000.json \
+--target_metrics ndcg@3 
+```
+```target_metric``` here can be set to "ndcg@3", "ndcg@100" or "recall@100". The files showing the evaluation results would be saved in the path `./output/post-retrieval/`. 
+
+#### CAsT-20
+Likewise, Use the following command to evaluate QPP methods when they estimate the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25, human-written query rewrites+BM25 and ConvDR on CAsT-20:
+```bash
+python -u evaluation_QPP.py \
+--pattern './output/post-retrieval/cast-20.T5-QA-bm25-1000.*' \
+--ap_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-T5-QA-bm25-1000.json \
+--target_metrics ndcg@3 
+
+python -u evaluation_QPP.py \
+--pattern './output/post-retrieval/cast-20.QuReTeC-QA-bm25-1000.*' \
+--ap_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-QuReTeC-QA-bm25-1000.json \
+--target_metrics ndcg@3
+
+python -u evaluation_QPP.py \
+--pattern './output/post-retrieval/cast-20.manual-bm25-1000.*' \
+--ap_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-manual-bm25-1000.json \
+--target_metrics ndcg@3
+
+python -u evaluation_QPP.py \
+--pattern './output/post-retrieval/cast-20.ConvDR-1000.*' \
+--ap_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
+--target_metrics ndcg@3 
+```
+The files showing the evaluation results would be saved in the path `./output/post-retrieval/`. 
 
 #### OR-QuAC
-We first train a QPP model on the training set of OR-QuAC, and then conduct inference on the development set and test set of OR-QuAC.
-Note that we always train a QPP model to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC.
-It is because [the T5 rewriter](https://huggingface.co/castorini/t5-base-canard) and [QuReTeC](https://github.com/nickvosk/sigir2020-query-resolution) we use in this paper are trained over the queries in the training set of OR-QuAC.
-Thus it is unreasonable to run them on the training set of OR-QuAC.
-We pick the best checkpoint based on the development set in terms of Pearson's correlation scores.
-We still use an example of NQAQPP in the setting of estimating the retrieval quality of BM25 with T5-based query rewrites on OR-QuAC in terms of nDCG@3.
-
-First we set up and train NQAQPP to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC in terms of nDCG@3:
+Likewise, use the following command to evaluate QPP methods when they estimate the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25, human-written query rewrites+BM25 and ConvDR on the test set of OR-QuAC:
 ```bash
-export MODEL_TYPE=NQAQPP 
-export DATASET_CLASS=or-quac
-export DATASET_NAME=or-quac-train
-export QUERY_TYPE=manual # always set it as "manual" when DATASET_NAME is "or-quac-train" 
-export RETRIEVER=manual-bm25 # always set it as "manual-bm25" when DATASET_NAME is "or-quac-train"
-export TARGET_METRIC=ndcg@3 
+python -u evaluation_QPP.py \
+--pattern './output/post-retrieval/or-quac-test.T5-Q-bm25-1000.*' \
+--ap_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-T5-Q-bm25-1000.json \
+--target_metrics ndcg@3
 
-export MODEL_NAME=${DATASET_NAME}.${QUERY_TYPE}-${MODEL_TYPE}-${TARGET_METRIC}-${RETRIEVER}
-export OUTPUT_NAME=${DATASET_NAME}.${QUERY_TYPE}-${MODEL_TYPE}-${TARGET_METRIC}-${RETRIEVER}
-export QUERY_PATH=./datasets/${DATASET_CLASS}/queries/${DATASET_NAME}.queries-${QUERY_TYPE}.tsv
-export RUN_PATH=./datasets/${DATASET_CLASS}/runs/${DATASET_NAME}.run-${RETRIEVER}-1000.txt
-export ACTUAL_PERFORMANCE_PATH=./datasets/${DATASET_CLASS}/actual_performance/${DATASET_NAME}.actual-performance-run-${RETRIEVER}-1000.json
-export INDEX_PATH=./datasets/${DATASET_CLASS}/index
-export QRELS_PATH=./datasets/${DATASET_CLASS}/qrels/${DATASET_CLASS}.qrels.txt
-export EPOCH_NUM=10 
+python -u evaluation_QPP.py \
+--pattern './output/post-retrieval/or-quac-test.QuReTeC-Q-bm25-1000.*' \
+--ap_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-QuReTeC-Q-bm25-1000.json \
+--target_metrics ndcg@3 
 
-python -u supervisedQPP/${MODEL_TYPE}/main.py \
---model_name ${MODEL_NAME} \
---output_name ${OUTPUT_NAME} \
---dataset ${DATASET_NAME} \
---query_path ${QUERY_PATH} \
---index_path ${INDEX_PATH} \
---qrels_path ${QRELS_PATH} \
---run_path ${RUN_PATH} \
---actual_performance_path ${ACTUAL_PERFORMANCE_PATH} \
---target_metric ${TARGET_METRIC} \
---epoch_num ${EPOCH_NUM} \
---mode training 
+python -u evaluation_QPP.py \
+--pattern './output/post-retrieval/or-quac-test.manual-bm25-1000.*' \
+--ap_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-manual-bm25-1000.json \
+--target_metrics ndcg@3 
+
+python -u evaluation_QPP.py \
+--pattern './output/post-retrieval/or-quac-test.ConvDR-1000.*' \
+--ap_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-ConvDR-1000.json \
+--target_metrics ndcg@3
 ```
-The training process would produce checkpoints over all epochs, which are stored in `./output/${MODEL_NAME}/checkpoint/`, namely `./output/or-quac-train.manual-NQAQPP-ndcg@3-manual-bm25/checkpoint/`.
-
-Set up variables and conduct inference on the development set of OR-QuAC:
-```bash
-export MODEL_TYPE=NQAQPP 
-export DATASET_CLASS=or-quac
-export DATASET_NAME=or-quac-dev 
-export QUERY_TYPE=T5-Q
-export RETRIEVER=T5-Q-bm25
-export TARGET_METRIC=ndcg@3 
-
-export MODEL_NAME=or-quac-train.manual-${MODEL_TYPE}-ndcg@3-manual-bm25
-export OUTPUT_NAME=${DATASET_NAME}.${QUERY_TYPE}-${MODEL_TYPE}-${TARGET_METRIC}-${RETRIEVER}
-export QUERY_PATH=./datasets/${DATASET_CLASS}/queries/${DATASET_NAME}.queries-${QUERY_TYPE}.tsv
-export RUN_PATH=./datasets/${DATASET_CLASS}/runs/${DATASET_NAME}.run-${RETRIEVER}-1000.txt
-export ACTUAL_PERFORMANCE_PATH=./datasets/${DATASET_CLASS}/actual_performance/${DATASET_NAME}.actual-performance-run-${RETRIEVER}-1000.json
-export INDEX_PATH=./datasets/${DATASET_CLASS}/index
-export QRELS_PATH=./datasets/${DATASET_CLASS}/qrels/${DATASET_CLASS}.qrels.txt
-export EPOCH_NUM=10 
-
-python -u supervisedQPP/${MODEL_TYPE}/main.py \
---model_name ${MODEL_NAME} \
---output_name ${OUTPUT_NAME} \
---dataset ${DATASET_NAME} \
---query_path ${QUERY_PATH} \
---index_path ${INDEX_PATH} \
---qrels_path ${QRELS_PATH} \
---run_path ${RUN_PATH} \
---actual_performance_path ${ACTUAL_PERFORMANCE_PATH} \
---target_metric ${TARGET_METRIC} \
---epoch_num ${EPOCH_NUM} \
---mode inference
-```
-The inference process produces predicted performance files over all epochs on the development set of OR-QuAC, which are stored in `./output/${MODEL_NAME}/`, namely `./output/or-quac-train.manual-NQAQPP-ndcg@3-manual-bm25`.
-Use the following command to evaluate NQAQPP on the development set of OR-QuAC in terms of Pearson's 𝜌, Kendall's 𝜏, and Spearman's 𝜌 correlation coefficients:
-```bash
-python -u evaluation_QPP.py --ap_path ${ACTUAL_PERFORMANCE_PATH} --pp_path output/${MODEL_NAME}/${OUTPUT_NAME} --epoch_num ${EPOCH_NUM} --target_metric ${TARGET_METRIC}
-```
-The above command will generate a result file (`${OUTPUT_NAME}.${TARGET_METRIC}`, namely **or-quac-dev.T5-Q-NQAQPP-ndcg@3-T5-Q-bm25.ndcg@3**) showing the correlation scores over all epochs on the development set of OR-QuAC, which is stored in `./output/${MODEL_NAME}/`, namely `./output/or-quac-train.manual-NQAQPP-ndcg@3-manual-bm25/`.
-
-Set up variables and conduct inference on the test set of OR-QuAC:
-```bash
-export MODEL_TYPE=NQAQPP 
-export DATASET_CLASS=or-quac
-export DATASET_NAME=or-quac-test 
-export QUERY_TYPE=T5-Q
-export RETRIEVER=T5-Q-bm25
-export TARGET_METRIC=ndcg@3 
-
-export MODEL_NAME=or-quac-train.manual-${MODEL_TYPE}-ndcg@3-manual-bm25
-export OUTPUT_NAME=${DATASET_NAME}.${QUERY_TYPE}-${MODEL_TYPE}-${TARGET_METRIC}-${RETRIEVER}
-export QUERY_PATH=./datasets/${DATASET_CLASS}/queries/${DATASET_NAME}.queries-${QUERY_TYPE}.tsv
-export RUN_PATH=./datasets/${DATASET_CLASS}/runs/${DATASET_NAME}.run-${RETRIEVER}-1000.txt
-export ACTUAL_PERFORMANCE_PATH=./datasets/${DATASET_CLASS}/actual_performance/${DATASET_NAME}.actual-performance-run-${RETRIEVER}-1000.json
-export INDEX_PATH=./datasets/${DATASET_CLASS}/index
-export QRELS_PATH=./datasets/${DATASET_CLASS}/qrels/${DATASET_CLASS}.qrels.txt
-export EPOCH_NUM=10 
-
-python -u supervisedQPP/${MODEL_TYPE}/main.py \
---model_name ${MODEL_NAME} \
---output_name ${OUTPUT_NAME} \
---dataset ${DATASET_NAME} \
---query_path ${QUERY_PATH} \
---index_path ${INDEX_PATH} \
---qrels_path ${QRELS_PATH} \
---run_path ${RUN_PATH} \
---actual_performance_path ${ACTUAL_PERFORMANCE_PATH} \
---target_metric ${TARGET_METRIC} \
---epoch_num ${EPOCH_NUM} \
---mode inference
-```
-The inference process produces predicted performance files over all epochs on the test set of OR-QuAC, which are stored in `./output/${MODEL_NAME}/`, namely `./output/or-quac-train.manual-NQAQPP-ndcg@3-manual-bm25`.
-Use the following command to evaluate NQAQPP on the test set of OR-QuAC in terms of Pearson's 𝜌, Kendall's 𝜏, and Spearman's 𝜌 correlation coefficients:
-```bash
-python -u evaluation_QPP.py --ap_path ${ACTUAL_PERFORMANCE_PATH} --pp_path output/${MODEL_NAME}/${OUTPUT_NAME} --epoch_num ${EPOCH_NUM} --target_metric ${TARGET_METRIC}
-```
-The above command will generate a result file (`${OUTPUT_NAME}.${TARGET_METRIC}`, namely **or-quac-test.T5-Q-NQAQPP-ndcg@3-T5-Q-bm25.ndcg@3**) showing the correlation scores over all epochs on the test set of OR-QuAC, which is stored in `./output/${MODEL_NAME}/`, namely `./output/or-quac-train.manual-NQAQPP-ndcg@3-manual-bm25/`.
-
-#### CAsT-19 and CAsT-20 (Warm-Up) 
-We consider a warm-up setting, where we fine-turn the model, pre-trained on the training set of OR-QuAC (warm-up), using 5-fold cross-validation on CAsT-19 or CAsT-20.
-We still use an example of NQAQPP; it estimates the retrieval quality of BM25 with T5-based query rewrites on CAsT-19 in terms of nDCG@3.
-We first pre-train NQAQPP to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC in terms of nDCG@3; the training process is the same as  the training process in the above section.
-Thus we directly assume that we already finish the pre-training of NQAQPP on the training set of OR-QuAC (warm-up), and the pre-trained checkpoints are stored in `./output/${MODEL_NAME}/checkpoint/`, namely `./output/or-quac-train.manual-NQAQPP-ndcg@3-manual-bm25/checkpoint/`.
-
-We found that fine-tuning the checkpoint pre-trained for one epoch on the training set of OR-QuAC gets better performance.
-So we fine-tune NQAQPP, pre-trained for one epoch on the training set of OR-QuAC, on CAsT-19 using 5-fold cross-validation (with the `--cross_validate` flag on):
-```bash
-export MODEL_TYPE=NQAQPP 
-export DATASET_CLASS=cast-19-20
-export DATASET_NAME=cast-19 
-export QUERY_TYPE=T5-Q 
-export RETRIEVER=T5-Q-bm25 
-export TARGET_METRIC=ndcg@3
-
-export MODEL_NAME=${DATASET_NAME}.${QUERY_TYPE}-${MODEL_TYPE}-warm-up-${TARGET_METRIC}-${RETRIEVER}
-export OUTPUT_NAME=${DATASET_NAME}.${QUERY_TYPE}-${MODEL_TYPE}-warm-up-${TARGET_METRIC}-${RETRIEVER}
-export QUERY_PATH=./datasets/${DATASET_CLASS}/queries/${DATASET_NAME}.queries-${QUERY_TYPE}.tsv
-export RUN_PATH=./datasets/${DATASET_CLASS}/runs/${DATASET_NAME}.run-${RETRIEVER}-1000.txt
-export ACTUAL_PERFORMANCE_PATH=./datasets/${DATASET_CLASS}/actual_performance/${DATASET_NAME}.actual-performance-run-${RETRIEVER}-1000.json
-export INDEX_PATH=./datasets/${DATASET_CLASS}/index
-export QRELS_PATH=./datasets/${DATASET_CLASS}/qrels/${DATASET_NAME}.qrels.txt
-export EPOCH_NUM=10 
-
-export WARM_UP_PATH=./output/or-quac-train.manual-${MODEL_TYPE}-ndcg@3-manual-bm25/checkpoint/1.pkl 
-# "1.pkl" means the checkpoint pre-trained for one epoch on the training set of OR-QuAC. 
-# please use ".../checkpoint/1.pkl" for NQAQPP or qppBERTPL but use ".../checkpoint/1" for BERTQPP
-
-python -u supervisedQPP/${MODEL_TYPE}/main.py \
---model_name ${MODEL_NAME} \
---output_name ${OUTPUT_NAME} \
---dataset ${DATASET_NAME} \
---query_path ${QUERY_PATH} \
---index_path ${INDEX_PATH} \
---qrels_path ${QRELS_PATH} \
---run_path ${RUN_PATH} \
---actual_performance_path ${ACTUAL_PERFORMANCE_PATH} \
---target_metric ${TARGET_METRIC} \
---epoch_num ${EPOCH_NUM} \
---warm_up_path ${WARM_UP_PATH} \
---cross_validate \
---mode training # can be changed to "inference" after finishing the training
-```
-`WARM_UP_PATH` shows the path to the checkpoint pre-trained on the training set of OR-QuAC. 
-"1.pkl" means the checkpoint pre-trained for one epoch on the training set of OR-QuAC.
-Note that please use ".../checkpoint/1.pkl" for NQAQPP or qppBERTPL but use ".../checkpoint/1" for BERTQPP.
-
-Next, set the flag `--mode` as `inference` and execute the above command again to conduct inference.
-The inference process produces predicted performance files over all epochs on CAsT-19, which are stored in `./output/${MODEL_NAME}/`, namely `./output/cast-19.T5-Q-NQAQPP-warm-up-ndcg@3-T5-Q-bm25/`.
-
-Finally, use the following command to evaluate NQAQPP on CAsT-19 in terms of Pearson's 𝜌, Kendall's 𝜏, and Spearman's 𝜌 correlation coefficients:
-```bash
-python -u evaluation_QPP.py --ap_path ${ACTUAL_PERFORMANCE_PATH} --pp_path output/${MODEL_NAME}/${OUTPUT_NAME} --epoch_num ${EPOCH_NUM} --target_metric ${TARGET_METRIC}
-```
-The above command will generate a result file (`${OUTPUT_NAME}.${TARGET_METRIC}`, namely **cast-19.T5-Q-NQAQPP-warm-up-ndcg@3-T5-Q-bm25.ndcg@3**) showing the correlation scores for all epochs, which is stored in `./output/${MODEL_NAME}/`, namely `./output/cast-19.T5-Q-NQAQPP-warm-up-ndcg@3-T5-Q-bm25/`.
-
-### Unsupervised QPP methods
-#### NQC, SMV, WIG, σ<sub>k</sub>, σ<sub>%</sub>
-The following script allow to run ```NQC```, ```WIG```, ```SMV```, ```sigma_K```, ```sigma_persentage``` QPP methods:
-
-In order to run the unsupervised QPP methods we covered in the paper, you can use the ```unsupervised_qpp.py``` script as follows:
-```bash
-python unsupervisedQPP/unsupervised_qpp.py \
---run_file {path_to_your_run_file} \
---query_file {path_to_your_query_file} \
---k {cut_off depth} \
---qpp_method {any of the QPP methods reported in the paper including nqc, wig, smv, simga_k, sigma_percentage,...}\
---output {path_to_output_file}
-```
-The output file would include ```qid \t predicted performance``` per line. Note that some of the QPP methods, such as clarity, would take longer to run. 
-You can find the predicted performance files for all unsupervised QPP methods reported in our paper from [here](./predicted_performance_in_tables).
-
-For instance, assuming you have followed the previous steps and you have the run files stored in the ```datasets``` folder, the following command could predict the performance of BM25 with the T5 query rewriter on the cast-19 dataset using the NQC method when using top-100 retrieved documents:
-```bash
-export MODEL_TYPE=nqc # can be set to "nqc", "smv", 'wig', 'sigma_k', 'sigma_percentage', ...
-export DATASET_CLASS=cast-19-20
-export DATASET_NAME=cast-19 
-export QUERY_TYPE=T5-Q 
-export RETRIEVER=T5-Q-bm25 
-export OUTPUT_NAME=${DATASET_NAME}.${QUERY_TYPE}-${MODEL_TYPE}-${RETRIEVER} 
-export QUERY_PATH=./datasets/${DATASET_CLASS}/queries/${DATASET_NAME}.queries-${QUERY_TYPE}.tsv
-export RUN_PATH=./datasets/${DATASET_CLASS}/runs/${DATASET_NAME}.run-${RETRIEVER}-1000.txt
-export ACTUAL_PERFORMANCE_PATH=./datasets/${DATASET_CLASS}/actual_performance/${DATASET_NAME}.actual-performance-run-${RETRIEVER}-1000.json
-```
-```bash
-python unsupervisedQPP/unsupervised_qpp.py \
---run_file ${RUN_PATH} \
---query_file ${QUERY_PATH}  \
---k 100 \
---qpp_method ${MODEL_TYPE} \
---output ./output/${MODEL_TYPE}/${OUTPUT_NAME}
-```
-The above command will produce a predicted performance file (`${OUTPUT_NAME}`, namely **cast-19.T5-Q-nqc-T5-Q-bm25**) that is stored in `./output/${MODEL_TYPE}/`, namely `./output/nqc/`.
-
-#### QF
-The following script allow to run ```QF``` QPP method which relies on psuedo relevance feedback. To run these metric, first we need to conduct the retrieval with rm3 feature enabled as follows :
-
-For CAsT-19 :
-```bash
-python -m pyserini.search.lucene --topics datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv  --index datasets/cast-19-20/index --output datasets/cast-19-20/runs/cast-19.run-T5-Q-bm25-rm3-1000.txt --bm25 --rm3  --hits 1000 --threads 16 --batch-size 64
-python -m pyserini.search.lucene --topics datasets/cast-19-20/queries/cast-19.queries-QuReTeC-Q.tsv  --index datasets/cast-19-20/index --output datasets/cast-19-20/runs/cast-19.run-QuReTeC-Q-bm25-rm3-1000.txt --bm25  --rm3 --hits 1000 --threads 16 --batch-size 64
-python -m pyserini.search.lucene --topics datasets/cast-19-20/queries/cast-19.queries-manual.tsv  --index datasets/cast-19-20/index --output datasets/cast-19-20/runs/cast-19.run-manual-bm25-rm3-1000.txt --bm25  --rm3  --hits 1000 --threads 16 --batch-size 64
-```
-
-For CAsT-20 :
-```bash
-python -m pyserini.search.lucene --topics datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv  --index datasets/cast-19-20/index --output datasets/cast-19-20/runs/cast-20.run-T5-QA-bm25-1000.txt --bm25 --rm3 --hits 1000 --threads 16 --batch-size 64
-python -m pyserini.search.lucene --topics datasets/cast-19-20/queries/cast-20.queries-QuReTeC-QA.tsv  --index datasets/cast-19-20/index --output datasets/cast-19-20/runs/cast-20.run-QuReTeC-QA-bm25-1000.txt --bm25 --rm3 --hits 1000 --threads 16 --batch-size 64
-python -m pyserini.search.lucene --topics datasets/cast-19-20/queries/cast-20.queries-manual.tsv  --index datasets/cast-19-20/index --output datasets/cast-19-20/runs/cast-20.run-manual-bm25-1000.txt --bm25 --rm3 --hits 1000 --threads 16 --batch-size 64 
-```
-
-For OR-QuAC:
-```bash
-python -m pyserini.search.lucene --topics datasets/or-quac/queries/or-quac-dev.queries-T5-Q.tsv --index datasets/or-quac/index --output datasets/or-quac/runs/or-quac-dev.run-T5-Q-bm25-rm3-1000.txt --bm25 --rm3 --hits 1000 --threads 16 --batch-size 64
-python -m pyserini.search.lucene --topics datasets/or-quac/queries/or-quac-dev.queries-QuReTeC-Q.tsv  --index datasets/or-quac/index --output datasets/or-quac/runs/or-quac-dev.run-QuReTeC-Q-bm25-rm3-1000.txt --bm25 --rm3 --hits 1000 --threads 16 --batch-size 64 
-python -m pyserini.search.lucene --topics datasets/or-quac/queries/or-quac-dev.queries-manual.tsv --index datasets/or-quac/index --output datasets/or-quac/runs/or-quac-dev.run-manual-bm25-rm3-1000.txt --bm25 --rm3 --hits 1000 --threads 16 --batch-size 64
-```
-
-The input for  QF methods includes the original run_file (using BM25) as well as the runfile we just created using BM25+RM3.  As such, we run these unsupervised QPP methods as follows:
-```bash
-export RUN_RM3_PATH=./datasets/${DATASET_CLASS}/runs/${DATASET_NAME}.run-${RETRIEVER}-rm3-1000.txt
-export MODEL_TYPE=qf
-```
-```bash
-python unsupervisedQPP/unsupervised_qpp.py \
---run_file ${RUN_PATH} \
---run_file_prf ${RUN_RM3_PATH} \
---query_file ${QUERY_PATH}  \
---k 100 \
---qpp_method  ${MODEL_TYPE}\
---output ./output/${MODEL_TYPE}/${OUTPUT_NAME}
-```
-
-#### UEF
-The following script allow to run ```UEF``` QPP method which similar to QF also relies on psuedo relevance feedback. In other words, it requires the original run file as well as the retrieval results with psuedo relevance feedback. In addition, UEF requires one of the previous QPP methods prediuction result. In the paper, we reported UEF(NQC), as such, to run UEF, it is required to have the NQC results ready beforehand. Assuming we have the NQC predicted results, the following script would run UEF(NQC) QPP method:
-
-```bash
-export QPP_BASE=${DATASET_NAME}.${QUERY_TYPE}-nqc-${RETRIEVER} 
-export MODEL_TYPE=uef
-```
-
-```bash
-python unsupervisedQPP/unsupervised_qpp.py \
---run_file ${RUN_PATH} \
---run_file_prf ${RUN_RM3_PATH} \
---query_file ${QUERY_PATH}  \
---k 100 \
---qpp_method ${MODEL_TYPE}\
---qpp_base ${QPP_BASE} \
---output ./output/${MODEL_TYPE}/${OUTPUT_NAME}
-```
-
-#### Clarity
-To calculate Clarity QPP method we are requires some term statiscs infdormation from the index. Therefore this method takes the index as one of its input. To run clarity QPP method, you can run:
-
-```bash
-export INDEX_PATH= datasets/cast-19-20/index #or  datasets/or-quac/index for or-quac dataset
-export MODEL_TYPE=clarity
-```
-
-```bash
-python unsupervisedQPP/unsupervised_qpp.py \
---run_file ${RUN_PATH} \
---query_file ${QUERY_PATH}  \
---index ${INDEX_PATH}
---k 100 \
---qpp_method ${MODEL_TYPE}\
---output ./output/${MODEL_TYPE}/${OUTPUT_NAME}
-```
-
-We note that unlike previouw metrics, clarity score is very slow and it has pretty high running time since it ierate over all the words in the corpus. Thus, running it with ```k=100``` could take long, especially on or-quac dataset which include high number of queries.
-
-
- #### Evaluation
-Note that all unsupervised QPP methods are independent of a specific target metric. 
-Similar to the supervised methods, we use the following command to evaluate unsupervised QPP methods in terms of Pearson's 𝜌, Kendall's 𝜏, and Spearman's 𝜌 correlation coefficients:
-```bash
-export TARGET_METRIC=ndcg@3
-python -u evaluation_QPP.py --ap_path ${ACTUAL_PERFORMANCE_PATH} --pp_path output/${MODEL_TYPE}/${OUTPUT_NAME} --target_metric ${TARGET_METRIC}
-```
-```target_metric``` here can be set to "ndcg@3", "ndcg@100" or "recall@100".
+The files showing the evaluation results would be saved in the path `./output/post-retrieval/`. 
 
 ## Plots
 We added reported plots and the code for box plots in our paper in the `plots` folder. 
