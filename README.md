@@ -658,6 +658,7 @@ python -u ./supervisedQPP/NQAQPP/main.py \
 --mode inference
 ```
 The output files of NQAQPP would be saved in the path `./output/post-retrieval/`. The output file would include ```qid \t predicted performance``` per line.
+Please make sure the value of `--target_metric` is consistent with the one used during training.
 
 When estimating the retrieval quality of ConvDR, we consider three types of inputs to a QPP method to help the QPP method understand the current query, namely T5-based, QuReTeC-based and human-written query rewrites.
 Use the following commands to run NQAQPP to estimate the retrieval quality of ConvDR on the test set of OR-QuAC:
@@ -963,10 +964,13 @@ python -u ./supervisedQPP/NQAQPP/main.py \
 # --mode inference
 ```
 The above commands would train NQAQPP using 5-fold cross-validation. 
-`--warm_up_path` shows the path to the checkpoint pre-trained on the training set of OR-QuAC. Note that one can activate `--warm_up_path`, which would fine-turn the checkpoint of NQAQPP pre-trained on the training set of OR-QuAC (warm-up). We found that fine-tuning the checkpoint pre-trained for one epoch on the training set of OR-QuAC gets better performance. After training, activating `--mode inference` and execute the above command again to conduct inference; The inference process produces predicted performance files, which would be saved in the path `./output/post-retrieval/`.
+`--warm_up_path` shows the path to the checkpoint pre-trained on the training set of OR-QuAC. Note that one can activate `--warm_up_path`, which would fine-turn the checkpoint of NQAQPP pre-trained on the training set of OR-QuAC (warm-up). We found that fine-tuning the checkpoint pre-trained for one epoch on the training set of OR-QuAC gets better performance. Please make sure the target metric used during 5-fold cross-validation and the one used during pre-training on OR-QuAC are the same. 
+For example, if warm up NQAQPP from `./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@100/1.pkl`, one should set `--target_metric` as `ndcg@100`.
+After training, activate `--mode inference` and execute the above command again to conduct inference; The inference process produces predicted performance files, which would be saved in the path `./output/post-retrieval/`.
 
 
 #### Assessing ConvDR by NQAQPP on CAsT-19
+When estimating the retrieval quality of ConvDR, we consider three types of inputs to a QPP method to help the QPP method understand the current query, namely T5-based, QuReTeC-based and human-written query rewrites.
 Similarly, use the following commands to train NQAQPP to estimate the retrieval quality of ConvDR on CAsT-19 in terms of nDCG@3:
 ```bash
 python -u ./supervisedQPP/NQAQPP/main.py \
