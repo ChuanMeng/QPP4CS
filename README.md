@@ -585,12 +585,15 @@ python -u unsupervisedQPP/post_retrieval.py \
 ```
 ### Post-retrieval supervised QPP methods
 We consider three state-of-the-art supervised QPP methods, namely [NQAQPP](https://dl.acm.org/doi/abs/10.1145/3341981.3344249), [BERTQPP](https://dl.acm.org/doi/abs/10.1145/3459637.3482063) and [qppBERTPL](https://dl.acm.org/doi/abs/10.1145/3477495.3531821).
-Note that we recommend using GPU to execute the following commands. We use an NVIDIA RTX A6000 GPU to train all supervised methods with the same random seed 42. Please use the same device and random seed if you would like to precisely replicate the results reported in our paper.
+Note that we recommend using GPU to execute the following commands. We use an **NVIDIA RTX A6000 GPU** to train all supervised methods with the same random seed 42. Please use the same device and random seed if you would like to precisely replicate the results reported in our paper.
 
-We first train a QPP model on the training set of OR-QuAC, and then conduct inference on the test set of OR-QuAC.
-Note that we always train a QPP model to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC.
+Note that for all experiments on OR-QuAC, we first train a QPP model on the training set of OR-QuAC, and then conduct inference on the test set of OR-QuAC.
+During training, we always train a QPP model to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC.
 It is because [the T5 rewriter](https://huggingface.co/castorini/t5-base-canard) and [QuReTeC](https://github.com/nickvosk/sigir2020-query-resolution) we use in this paper are trained over the queries in the training set of OR-QuAC.
-Thus it is unreasonable to run them on the training set of OR-QuAC.
+Thus it is unreasonable to run them on the training set of OR-QuAC. 
+Also, because ConvDR is trained on the training set of OR-QuAC, there would be a great shift between the run files of ConvDR on the training set and the test set of OR-QuAC. Thus, it is unreasonable to train a QPP method based on the run file of ConvDR on the training set of OR-QuAC.
+
+Note that, during training, qppBERTPL is a classification-based model and does not learn to approximate scores of a specific IR metric. However, regression-based models (e.g., NQAQPP, BERTQPP) will learn to estimate the retrieval quality in terms of a specific IR metric, such as nDCG@3, nDCG@100 or Recall@100.
 
 
 #### NQAQPP on OR-QuAC  
@@ -656,6 +659,7 @@ python -u ./supervisedQPP/NQAQPP/main.py \
 ```
 The output files of NQAQPP would be saved in the path `./output/post-retrieval/`. The output file would include ```qid \t predicted performance``` per line.
 
+When estimating the retrieval quality of ConvDR, we consider three types of inputs to a QPP method to help the QPP method understand the current query, namely T5-based, QuReTeC-based and human-written query rewrites.
 Use the following commands to run NQAQPP to estimate the retrieval quality of ConvDR on the test set of OR-QuAC:
 ```bash
 python -u ./supervisedQPP/NQAQPP/main.py \
