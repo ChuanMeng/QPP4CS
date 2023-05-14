@@ -431,7 +431,7 @@ python -u evaluation_QPP.py \
 ```target_metric``` here can be set to "ndcg@3", "ndcg@100" or "recall@100". The files showing the evaluation results would be saved in the path `./output/pre-retrieval/`. 
 
 ### Post-retrieval unsupervised QPP methods
-The following is used to run the post-retrieval unsupervised QPP methods: Clarity, WIG, NQC, SMV, σ<sub>max</sub> and n(σσ<sub>x%</sub>).
+The following is used to run the post-retrieval unsupervised QPP methods: Clarity, WIG, NQC, SMV, σ<sub>max</sub> and n(σ<sub>x%</sub>).
 
 #### Assessing BM25 on CAsT-19
 When assessing BM25, QPP methods and BM25 always share the same query rewrites. Use the following commands to estimate the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25 and human-written+BM25 on CAsT-19:
@@ -509,7 +509,7 @@ python -u unsupervisedQPP/post_retrieval.py \
 ```
 #### Assessing ConvDR on CAsT-19
 ConvDR has a specially-trained query encoder to encode raw utterances. QPP methods designed for ad-hoc search do not have a special module to understand raw utterances.
-When estimating the retrieval quality of ConvDR, we consider three types of inputs to QPP methods, namely T5-based, QuReTeC-based and human-written query rewrites. Use the following commands to estimate the retrieval quality of ConvDR on CAsT-19:
+When estimating the retrieval quality of ConvDR, we consider three types of inputs to QPP methods to help QPP methods understand the current query, namely T5-based, QuReTeC-based and human-written query rewrites. Use the following commands to estimate the retrieval quality of ConvDR on CAsT-19:
 ```bash
 python -u unsupervisedQPP/post_retrieval.py \
 --query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
@@ -558,6 +558,7 @@ python -u unsupervisedQPP/post_retrieval.py \
 --qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
 --output_path ./output/post-retrieval/ 
 ```
+
 #### Assessing ConvDR on OR-QuAC
 Similarly, use the following commands to estimate the retrieval quality of BM25 with T5-based, QuReTeC-based and human-written query rewrites on the test set of OR-QuAC:
 ```bash
@@ -582,7 +583,906 @@ python -u unsupervisedQPP/post_retrieval.py \
 --qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
 --output_path ./output/post-retrieval/ 
 ```
+### Post-retrieval supervised QPP methods
+We consider three state-of-the-art supervised QPP methods, namely [NQAQPP](https://dl.acm.org/doi/abs/10.1145/3341981.3344249), [BERTQPP](https://dl.acm.org/doi/abs/10.1145/3459637.3482063) and [qppBERTPL](https://dl.acm.org/doi/abs/10.1145/3477495.3531821).
+Note that we recommend using GPU to execute the following commands. We use an NVIDIA RTX A6000 GPU to train all supervised methods with the same random seed 42. Please use the same device and random seed if you would like to precisely replicate the results reported in our paper.
 
+We first train a QPP model on the training set of OR-QuAC, and then conduct inference on the test set of OR-QuAC.
+Note that we always train a QPP model to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC.
+It is because [the T5 rewriter](https://huggingface.co/castorini/t5-base-canard) and [QuReTeC](https://github.com/nickvosk/sigir2020-query-resolution) we use in this paper are trained over the queries in the training set of OR-QuAC.
+Thus it is unreasonable to run them on the training set of OR-QuAC.
+
+
+#### NQAQPP on OR-QuAC  
+Use the following command to train NQAQPP to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC in terms of nDCG@3:
+```bash
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-train.queries-manual.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-train.run-manual-bm25-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-train.actual-performance-run-manual-bm25-1000.json \
+--target_metric ndcg@3 \ # can be set to "ndcg@3", "ndcg@100" or "recall@100"
+--epoch_num 1  \
+--interval 1000
+```
+The training process would produce checkpoints, which are stored in `./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/`. `--target_metric` can be set to "ndcg@3", "ndcg@100" or "recall@100"; This variable would not impact qppBERTPL during training.
+
+Use the following commands to run NQAQPP to estimate the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25 and human-written+BM25 on the test set of OR-QuAC:
+```bash
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3 \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-T5-Q-bm25-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-T5-Q-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3 \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-QuReTeC-Q.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-QuReTeC-Q-bm25-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-QuReTeC-Q-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3 \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-manual.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-manual-bm25-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-manual-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+```
+The output files of NQAQPP would be saved in the path `./output/post-retrieval/`. The output file would include ```qid \t predicted performance``` per line.
+
+Use the following commands to run NQAQPP to estimate the retrieval quality of ConvDR on the test set of OR-QuAC:
+```bash
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3 \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3 \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-QuReTeC-Q.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3 \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-manual.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+```
+
+#### BERTQPP on OR-QuAC
+Use the following command to train BERTQPP to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC in terms of nDCG@3:
+```bash
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-train.queries-manual.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-train.run-manual-bm25-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-train.actual-performance-run-manual-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 1  \
+--interval 1000
+```
+The training process would produce checkpoints, which are stored in `./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/`.
+
+Use the following commands to run BERTQPP to estimate the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25 and human-written+BM25 on the test set of OR-QuAC:
+```bash
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3 \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-T5-Q-bm25-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-T5-Q-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3 \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-QuReTeC-Q.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-QuReTeC-Q-bm25-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-QuReTeC-Q-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3 \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-manual.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-manual-bm25-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-manual-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+```
+The output files of BERTQPP would be saved in the path `./output/post-retrieval/`.
+
+Use the following commands to run BERTQPP to estimate the retrieval quality of ConvDR on the test set of OR-QuAC:
+```bash
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3 \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3 \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-QuReTeC-Q.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3 \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-manual.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+```
+
+#### qppBERTPL on OR-QuAC
+Use the following command to train qppBERTPL to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC in terms of nDCG@3:
+```bash
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-train.queries-manual.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-train.run-manual-bm25-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-train.actual-performance-run-manual-bm25-1000.json \
+--epoch_num 1  \
+--interval 1000
+```
+The training process would produce checkpoints, which are stored in `./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/`. Note that qppBERTPL does not need to be assigned a target metric. 
+
+Use the following commands to run qppBERTPL to estimate the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25 and human-written+BM25 on the test set of OR-QuAC:
+```bash
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-T5-Q-bm25-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-T5-Q-bm25-1000.json \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-QuReTeC-Q.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-QuReTeC-Q-bm25-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-QuReTeC-Q-bm25-1000.json \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-manual.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-manual-bm25-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-manual-bm25-1000.json \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+```
+The output files of qppBERTPL would be saved in the path `./output/post-retrieval/`.
+
+Use the following commands to run qppBERTPL to estimate the retrieval quality of ConvDR on the test set of OR-QuAC:
+```bash
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-T5-Q.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-ConvDR-1000.json \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-QuReTeC-Q.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-ConvDR-1000.json \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_name or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/or-quac/queries/or-quac-test.queries-manual.tsv \
+--index_path ./datasets/or-quac/index \
+--qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
+--run_path ./datasets/or-quac/runs/or-quac-test.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/or-quac/actual_performance/or-quac-test.actual-performance-run-ConvDR-1000.json \
+--epoch_num 1  \
+--interval 1000 \
+--mode inference
+```
+
+#### Assessing BM25 by NQAQPP on CAsT-19
+Use the following commands to train NQAQPP in the setting of estimating the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25 and human-written+BM25 on CAsT-19 in terms of nDCG@3:
+```bash
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-T5-Q-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-T5-Q-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
+# --mode inference
+
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-QuReTeC-Q.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-QuReTeC-Q-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-QuReTeC-Q-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
+# --mode inference
+
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-manual.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-manual-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-manual-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
+# --mode inference
+```
+The above commands would train NQAQPP using 5-fold cross-validation. 
+`--warm_up_path` shows the path to the checkpoint pre-trained on the training set of OR-QuAC. Note that one can activate `--warm_up_path`, which would fine-turn the checkpoint of NQAQPP pre-trained on the training set of OR-QuAC (warm-up). We found that fine-tuning the checkpoint pre-trained for one epoch on the training set of OR-QuAC gets better performance. After training, activating `--mode inference` and execute the above command again to conduct inference; The inference process produces predicted performance files, which would be saved in the path `./output/post-retrieval/`.
+
+
+#### Assessing ConvDR by NQAQPP on CAsT-19
+Similarly, use the following commands to train NQAQPP to estimate the retrieval quality of ConvDR on CAsT-19 in terms of nDCG@3:
+```bash
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
+# --mode inference
+
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-QuReTeC-Q.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
+# --mode inference
+
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-manual.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
+# --mode inference
+```
+
+#### Assessing BM25 by BERTQPP on CAsT-19
+Similarly, use the following commands to train BERTQPP in the setting of estimating the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25 and human-written+BM25 on CAsT-19 in terms of nDCG@3:
+```bash
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-T5-Q-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-T5-Q-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
+# --mode inference
+
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-QuReTeC-Q.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-QuReTeC-Q-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-QuReTeC-Q-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
+# --mode inference
+
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-manual.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-manual-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-manual-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
+# --mode inference
+```
+
+#### Assessing ConvDR by BERTQPP on CAsT-19
+Similarly, use the following commands to train BERTQPP in the setting of estimating the retrieval quality of ConvDR on CAsT-19 in terms of nDCG@3:
+```bash
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
+# --mode inference
+
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-QuReTeC-Q.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
+# --mode inference
+
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-manual.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
+# --mode inference
+```
+
+#### Assessing BM25 by qppBERTPL on CAsT-19
+Similarly, use the following commands to train qppBERTPL in the setting of estimating the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25 and human-written+BM25 on CAsT-19 in terms of nDCG@3:
+```bash
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-T5-Q-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-T5-Q-bm25-1000.json \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
+# --mode inference
+
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-QuReTeC-Q.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-QuReTeC-Q-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-QuReTeC-Q-bm25-1000.json \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
+# --mode inference
+
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-manual.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-manual-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-manual-bm25-1000.json \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
+# --mode inference
+```
+
+#### Assessing ConvDR by qppBERTPL on CAsT-19
+Similarly, use the following commands to train qppBERTPL in the setting of estimating the retrieval quality of ConvDR on CAsT-19 in terms of nDCG@3:
+```bash
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-ConvDR-1000.json \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
+# --mode inference
+
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-QuReTeC-Q.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-ConvDR-1000.json \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
+# --mode inference
+
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-19.queries-manual.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-19.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-ConvDR-1000.json \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
+# --mode inference
+```
+
+#### Assessing BM25 by NQAQPP on CAsT-20
+```bash
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-T5-QA-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-T5-QA-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
+# --mode inference
+
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-QuReTeC-QA.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-QuReTeC-QA-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-QuReTeC-QA-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 10  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl
+# --mode inference
+
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-manual.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-manual-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-manual-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 5  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
+# --mode inference
+```
+
+#### Assessing ConvDR by NQAQPP on CAsT-20
+```bash
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 5  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
+# --mode inference
+
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-QuReTeC-QA.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 5  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
+# --mode inference
+
+python -u ./supervisedQPP/NQAQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-manual.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 5  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
+# --mode inference
+```
+
+#### Assessing BM25 by BERTQPP on CAsT-20
+
+```bash
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-T5-QA-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-T5-QA-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 5  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
+# --mode inference
+
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-QuReTeC-QA.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-QuReTeC-QA-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-QuReTeC-QA-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 5  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
+# --mode inference
+
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-manual.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-manual-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-manual-bm25-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 5  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
+# --mode inference
+```
+
+#### Assessing ConvDR by BERTQPP on CAsT-20
+```bash
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 5  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
+# --mode inference
+
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-QuReTeC-QA.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 5  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
+# --mode inference
+
+python -u ./supervisedQPP/BERTQPP/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-manual.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
+--target_metric ndcg@3 \
+--epoch_num 5  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
+# --mode inference
+```
+
+#### Assessing BM25 by qppBERTPL on CAsT-20
+```bash
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-T5-QA-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-T5-QA-bm25-1000.json \
+--epoch_num 5  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
+# --mode inference
+
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-QuReTeC-QA.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-QuReTeC-QA-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-QuReTeC-QA-bm25-1000.json \
+--epoch_num 5  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
+# --mode inference
+
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-manual.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-manual-bm25-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-manual-bm25-1000.json \
+--epoch_num 5  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
+# --mode inference
+```
+
+#### Assessing ConvDR by qppBERTPL on CAsT-20
+```bash
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-T5-QA.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
+--epoch_num 5  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
+# --mode inference
+
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-QuReTeC-QA.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
+--epoch_num 5  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
+# --mode inference
+
+python -u ./supervisedQPP/qppBERTPL/main.py \
+--checkpoint_path ./checkpoint/ \
+--output_path ./output/post-retrieval/ \
+--query_path ./datasets/cast-19-20/queries/cast-20.queries-manual.tsv \
+--index_path ./datasets/cast-19-20/index \
+--qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
+--run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
+--actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
+--epoch_num 5  \
+--interval 10  \
+--cross_validate \
+# --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
+# --mode inference
+```
 
 ### Evaluation for Post-retrieval QPP Methods
 The following commands are about evaluating all post-retrieval QPP methods in terms of Pearson's 𝜌, Kendall's 𝜏, and Spearman's 𝜌 correlation coefficients.
