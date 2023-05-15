@@ -1,7 +1,9 @@
 # Query Performance Prediction for Conversational Search (QPP4CS) 
 ![visitors](https://visitor-badge.glitch.me/badge?page_id=AGI-Edgerunners/QPP4CS)
  
-This is the repository for the reproducibility paper entitled [Query Performance Prediction: From Ad-hoc to Conversational Search]() and the workshop paper entitled [Performance Prediction for Conversational Search Using Perplexities of Query Rewrites](http://ceur-ws.org/Vol-3366/#paper-05).
+This is the repository for the papers:
+- [Query Performance Prediction: From Ad-hoc to Conversational Search]() (SIGIR 2023)
+- [Performance Prediction for Conversational Search Using Perplexities of Query Rewrites](http://ceur-ws.org/Vol-3366/#paper-05) (QPP++ 2023).
 
 Please cite our papers if you think this repository is helpful: 
 ```
