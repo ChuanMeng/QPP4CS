@@ -1,6 +1,5 @@
 # Query Performance Prediction for Conversational Search (QPP4CS) 
-![](https://api.visitorbadge.io/api/VisitorHit?user=estruyf&repo=github-visitors-badge&countColor=%237B1E7A)
-
+![](https://api.visitorbadge.io/api/VisitorHit?user=ChuanMeng&repo=QPP4CS&countColor=%237B1E7A)
 This is the repository for the papers:
 - [Query Performance Prediction: From Ad-hoc to Conversational Search]() (SIGIR 2023)
 - [Performance Prediction for Conversational Search Using Perplexities of Query Rewrites](http://ceur-ws.org/Vol-3366/#paper-05) (QPP++ 2023)
