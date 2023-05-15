@@ -1,5 +1,6 @@
 # Query Performance Prediction for Conversational Search (QPP4CS) 
 ![](https://api.visitorbadge.io/api/VisitorHit?user=ChuanMeng&repo=QPP4CS&countColor=%237B1E7A)
+
 This is the repository for the papers:
 - [Query Performance Prediction: From Ad-hoc to Conversational Search]() (SIGIR 2023)
 - [Performance Prediction for Conversational Search Using Perplexities of Query Rewrites](http://ceur-ws.org/Vol-3366/#paper-05) (QPP++ 2023)
@@ -1277,7 +1278,7 @@ python -u ./supervisedQPP/NQAQPP/main.py \
 --run_path ./datasets/cast-19-20/runs/cast-20.run-manual-bm25-1000.txt \
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-manual-bm25-1000.json \
 --target_metric ndcg@3 \
---epoch_num 5  \
+--epoch_num 10  \
 --interval 10  \
 --cross_validate \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
@@ -1295,7 +1296,7 @@ python -u ./supervisedQPP/NQAQPP/main.py \
 --run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
 --target_metric ndcg@3 \
---epoch_num 5  \
+--epoch_num 10  \
 --interval 10  \
 --cross_validate \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
@@ -1310,7 +1311,7 @@ python -u ./supervisedQPP/NQAQPP/main.py \
 --run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
 --target_metric ndcg@3 \
---epoch_num 5  \
+--epoch_num 10  \
 --interval 10  \
 --cross_validate \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
@@ -1325,7 +1326,7 @@ python -u ./supervisedQPP/NQAQPP/main.py \
 --run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
 --target_metric ndcg@3 \
---epoch_num 5  \
+--epoch_num 10  \
 --interval 10  \
 --cross_validate \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
@@ -1344,7 +1345,7 @@ python -u ./supervisedQPP/BERTQPP/main.py \
 --run_path ./datasets/cast-19-20/runs/cast-20.run-T5-QA-bm25-1000.txt \
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-T5-QA-bm25-1000.json \
 --target_metric ndcg@3 \
---epoch_num 5  \
+--epoch_num 10  \
 --interval 10  \
 --cross_validate \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
@@ -1359,7 +1360,7 @@ python -u ./supervisedQPP/BERTQPP/main.py \
 --run_path ./datasets/cast-19-20/runs/cast-20.run-QuReTeC-QA-bm25-1000.txt \
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-QuReTeC-QA-bm25-1000.json \
 --target_metric ndcg@3 \
---epoch_num 5  \
+--epoch_num 10  \
 --interval 10  \
 --cross_validate \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
@@ -1374,7 +1375,7 @@ python -u ./supervisedQPP/BERTQPP/main.py \
 --run_path ./datasets/cast-19-20/runs/cast-20.run-manual-bm25-1000.txt \
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-manual-bm25-1000.json \
 --target_metric ndcg@3 \
---epoch_num 5  \
+--epoch_num 10  \
 --interval 10  \
 --cross_validate \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
@@ -1392,7 +1393,7 @@ python -u ./supervisedQPP/BERTQPP/main.py \
 --run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
 --target_metric ndcg@3 \
---epoch_num 5  \
+--epoch_num 10  \
 --interval 10  \
 --cross_validate \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
@@ -1407,7 +1408,7 @@ python -u ./supervisedQPP/BERTQPP/main.py \
 --run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
 --target_metric ndcg@3 \
---epoch_num 5  \
+--epoch_num 10  \
 --interval 10  \
 --cross_validate \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
@@ -1422,7 +1423,7 @@ python -u ./supervisedQPP/BERTQPP/main.py \
 --run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
 --target_metric ndcg@3 \
---epoch_num 5  \
+--epoch_num 10  \
 --interval 10  \
 --cross_validate \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/1 \
@@ -1439,7 +1440,7 @@ python -u ./supervisedQPP/qppBERTPL/main.py \
 --qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
 --run_path ./datasets/cast-19-20/runs/cast-20.run-T5-QA-bm25-1000.txt \
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-T5-QA-bm25-1000.json \
---epoch_num 5  \
+--epoch_num 10  \
 --interval 10  \
 --cross_validate \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
@@ -1453,7 +1454,7 @@ python -u ./supervisedQPP/qppBERTPL/main.py \
 --qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
 --run_path ./datasets/cast-19-20/runs/cast-20.run-QuReTeC-QA-bm25-1000.txt \
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-QuReTeC-QA-bm25-1000.json \
---epoch_num 5  \
+--epoch_num 10  \
 --interval 10  \
 --cross_validate \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
@@ -1467,7 +1468,7 @@ python -u ./supervisedQPP/qppBERTPL/main.py \
 --qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
 --run_path ./datasets/cast-19-20/runs/cast-20.run-manual-bm25-1000.txt \
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-manual-bm25-1000.json \
---epoch_num 5  \
+--epoch_num 10  \
 --interval 10  \
 --cross_validate \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
@@ -1484,7 +1485,7 @@ python -u ./supervisedQPP/qppBERTPL/main.py \
 --qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
 --run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
---epoch_num 5  \
+--epoch_num 10  \
 --interval 10  \
 --cross_validate \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
@@ -1498,7 +1499,7 @@ python -u ./supervisedQPP/qppBERTPL/main.py \
 --qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
 --run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
---epoch_num 5  \
+--epoch_num 10  \
 --interval 10  \
 --cross_validate \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
@@ -1512,7 +1513,7 @@ python -u ./supervisedQPP/qppBERTPL/main.py \
 --qrels_path ./datasets/cast-19-20/qrels/cast-20.qrels.txt \
 --run_path ./datasets/cast-19-20/runs/cast-20.run-ConvDR-1000.txt \
 --actual_performance_path ./datasets/cast-19-20/actual_performance/cast-20.actual-performance-run-ConvDR-1000.json \
---epoch_num 5  \
+--epoch_num 10  \
 --interval 10  \
 --cross_validate \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/1.pkl \
