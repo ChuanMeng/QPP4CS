@@ -3,7 +3,7 @@
 
 This is the repository for the papers:
 - [Query Performance Prediction: From Ad-hoc to Conversational Search]() (SIGIR 2023)
-- [Performance Prediction for Conversational Search Using Perplexities of Query Rewrites](http://ceur-ws.org/Vol-3366/#paper-05) (QPP++ 2023)
+- [Performance Prediction for Conversational Search Using Perplexities of Query Rewrites](https://ceur-ws.org/Vol-3366/paper-05.pdf) (QPP++ 2023)
 
 We kindly ask you to cite our papers if you find this repository useful: 
 ```
@@ -19,8 +19,7 @@ We kindly ask you to cite our papers if you find this repository useful:
  title = {Performance Prediction for Conversational Search Using Perplexities of Query Rewrites},
  booktitle = {Proceedings of the The QPP++ 2023: Query Performance Prediction and Its Evaluation in New Tasks Workshop co-located with The 45th European Conference on Information Retrieval},
  year = {2023},
- pages = {25--28},
- url = {http://ceur-ws.org/Vol-3366/#paper-05},
+ pages = {25--28}
 }
 ```
 
