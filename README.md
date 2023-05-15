@@ -605,7 +605,7 @@ However, [the T5 rewriter](https://huggingface.co/castorini/t5-base-canard) and 
 Thus it is unreasonable to run them on the training set of OR-QuAC. 
 Second, when training a QPP method to learn to predict the retrieval quality of ConvDR, we still need to train the QPP method on the run file of ConvDR on the training set of OR-QuAC. 
 Because ConvDR was trained on the training set of OR-QuAC, there would be a great shift between the run files of ConvDR on the training set and the test set of OR-QuAC. 
-Thus, it is also unreasonable to train a QPP method based on the run file of ConvDR on the training set of OR-QuAC.
+Thus, it is also unreasonable to train a QPP method using the run file of ConvDR on the training set of OR-QuAC.
 So we always train a QPP method to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC.
 
 Note that all experiments on CAsT-19 and CAsT-20 are conducted using 5-fold cross-validation.
@@ -676,7 +676,7 @@ The output files of NQAQPP would be saved in the path `./output/post-retrieval/`
 The output file would include ```qid \t predicted performance``` per line.
 `--checkpoint_name` shows the saved checkpoints to be inferred.
 Please make sure the value of `--target_metric` is consistent with the one used during training.
-For example, if `--checkpoint_name` is `or-quac-train.manual-bm25-1000.manual-NQAQPP-recall@100`, which means that the model is trained to approximate the values of Recall@100 during training, `--target_metric` should be set to `recall@100`.
+For example, if `--checkpoint_name` is `or-quac-train.manual-bm25-1000.manual-NQAQPP-recall@100`, which means that the model is trained to approximate the values of Recall@100 during training, `--target_metric` used during inference should be set to `recall@100`.
 
 ConvDR has a specially-trained query encoder to encode raw utterances. 
 QPP methods designed for ad-hoc search do not have a special module to understand raw utterances.
@@ -984,7 +984,7 @@ python -u ./supervisedQPP/NQAQPP/main.py \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
 # --mode inference
 ```
-The above commands would train NQAQPP from scratch using 5-fold cross-validation. 
+The above commands would train NQAQPP from scratch using 5-fold cross-validation (with the `--cross_validate` flag on). 
 `--warm_up_path` shows the path to the checkpoint pre-trained on the training set of OR-QuAC. 
 Note that one can activate `--warm_up_path`, which would fine-turn the checkpoint of NQAQPP pre-trained on the training set of OR-QuAC (warm-up) instead of just learning from scratch. 
 We found that fine-tuning the checkpoint pre-trained for one epoch on the training set of OR-QuAC gets better performance. 
