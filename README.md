@@ -299,7 +299,8 @@ Through the above command, we get the actual performance file **or-quac-train.ac
 
 ### Pre-retrieval QPP methods
 #### Precomputation
-Some of the pre-retrieval QPP methods (VAR and PMI) would take a very long time to run. In order to reduce the time consumption, we first conduct precomputation on the two collections. 
+Some of the pre-retrieval QPP methods (VAR and PMI) would take a very long time to run. 
+In order to reduce the time consumption, we first conduct precomputation on the two collections. 
 The files of precomputation would be saved in the path `./output/pre-retrieval/`. 
 CAsT-19 and CAsT-20 share the same collection. Run the following command to do precomputation on the shared collection.
 ```bash
@@ -343,7 +344,8 @@ python -u ./unsupervisedQPP/pre_retrieval.py \
 --qrels_path ./datasets/or-quac/qrels/or-quac.qrels.txt \
 --output_path ./output/pre-retrieval
 ```
-The output files of these methods would be saved in the path `./output/pre-retrieval/`. The output file would include ```qid \t predicted performance``` per line.
+The output files of these methods would be saved in the path `./output/pre-retrieval/`. 
+The output file would include ```qid \t predicted performance``` per line.
 
 ### Perplexity-based pre-retrieval QPP framework
 #### Perplexity Computation
@@ -411,7 +413,7 @@ python -u ./unsupervisedQPP/pre_retrieval.py \
 The output files of PPL-QPP would be saved in the path `./output/pre-retrieval/`.
 
 ### Evaluation for pre-retrieval QPP methods
-Run the following commands to evaluate all pre-retrieval QPP methods and PPL-QPP for estimating the retrieval quality of T5+BM25 in terms of Pearson, Kendall, and Spearman correlation coefficients:
+Run the following commands to evaluate all pre-retrieval QPP methods and PPL-QPP for estimating the retrieval quality of T5-based query rewrites+BM25 in terms of Pearson, Kendall, and Spearman correlation coefficients:
 ```bash
 python -u evaluation_QPP.py \
 --pattern './output/pre-retrieval/cast-19.*' \
@@ -434,7 +436,8 @@ python -u evaluation_QPP.py \
 The following is used to run the post-retrieval unsupervised QPP methods: Clarity, WIG, NQC, SMV, σ<sub>max</sub> and n(σ<sub>x%</sub>).
 
 #### Assessing BM25 on CAsT-19
-When assessing BM25, QPP methods and BM25 always share the same query rewrites. Use the following commands to estimate the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25 and human-written+BM25 on CAsT-19:
+When assessing BM25, QPP methods and BM25 always share the same query rewrites. 
+Use the following commands to estimate the retrieval quality of T5-based, QuReTeC-based and human-written query rewrites+BM25 on CAsT-19:
 ```bash
  python -u unsupervisedQPP/post_retrieval.py \
 --query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
@@ -457,7 +460,8 @@ python -u unsupervisedQPP/post_retrieval.py \
 --qrels_path ./datasets/cast-19-20/qrels/cast-19.qrels.txt \
 --output_path ./output/post-retrieval/
 ```
-The output files of these methods would be saved in the path `./output/post-retrieval/`. The output file would include ```qid \t predicted performance``` per line.
+The output files of these methods would be saved in the path `./output/post-retrieval/`. 
+The output file would include ```qid \t predicted performance``` per line.
 
 #### Assessing BM25 on CAsT-20
 Similarly, use the following commands to estimate the retrieval quality of BM25 with T5-based, QuReTeC-based and human-written query rewrites on CAsT-20:
@@ -508,8 +512,10 @@ python -u unsupervisedQPP/post_retrieval.py \
 --output_path ./output/post-retrieval/ 
 ```
 #### Assessing ConvDR on CAsT-19
-ConvDR has a specially-trained query encoder to encode raw utterances. QPP methods designed for ad-hoc search do not have a special module to understand raw utterances.
-When estimating the retrieval quality of ConvDR, we consider three types of inputs to QPP methods to help QPP methods understand the current query, namely T5-based, QuReTeC-based and human-written query rewrites. Use the following commands to estimate the retrieval quality of ConvDR on CAsT-19:
+ConvDR has a specially-trained query encoder to encode raw utterances. 
+QPP methods designed for ad-hoc search do not have a special module to understand raw utterances.
+When estimating the retrieval quality of ConvDR, we consider three types of inputs to QPP methods to help QPP methods understand the current query, namely T5-based, QuReTeC-based and human-written query rewrites. 
+Use the following commands to estimate the retrieval quality of ConvDR on CAsT-19:
 ```bash
 python -u unsupervisedQPP/post_retrieval.py \
 --query_path ./datasets/cast-19-20/queries/cast-19.queries-T5-Q.tsv \
@@ -585,16 +591,24 @@ python -u unsupervisedQPP/post_retrieval.py \
 ```
 ### Post-retrieval supervised QPP methods
 We consider three state-of-the-art supervised QPP methods, namely [NQAQPP](https://dl.acm.org/doi/abs/10.1145/3341981.3344249), [BERTQPP](https://dl.acm.org/doi/abs/10.1145/3459637.3482063) and [qppBERTPL](https://dl.acm.org/doi/abs/10.1145/3477495.3531821).
-Note that we recommend using GPU to execute the following commands. We use an **NVIDIA RTX A6000 GPU** to train all supervised methods with the same random seed 42. Please use the same device and random seed if you would like to precisely replicate the results reported in our paper.
-
-Note that for all experiments on OR-QuAC, we first train a QPP model on the training set of OR-QuAC, and then conduct inference on the test set of OR-QuAC.
-During training, we always train a QPP model to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC.
-It is because [the T5 rewriter](https://huggingface.co/castorini/t5-base-canard) and [QuReTeC](https://github.com/nickvosk/sigir2020-query-resolution) we use in this paper are trained over the queries in the training set of OR-QuAC.
-Thus it is unreasonable to run them on the training set of OR-QuAC. 
-Also, because ConvDR is trained on the training set of OR-QuAC, there would be a great shift between the run files of ConvDR on the training set and the test set of OR-QuAC. Thus, it is unreasonable to train a QPP method based on the run file of ConvDR on the training set of OR-QuAC.
+Note that we recommend using GPU to execute the following commands. 
+We use an **NVIDIA RTX A6000 GPU** to train all supervised methods with the same random seed 42. 
+Please use the same device and random seed if you would like to precisely replicate the results reported in our paper.
 
 Note that, during training, qppBERTPL is a classification-based model and does not learn to approximate scores of a specific IR metric. However, regression-based models (e.g., NQAQPP, BERTQPP) will learn to estimate the retrieval quality in terms of a specific IR metric, such as nDCG@3, nDCG@100 or Recall@100.
 
+Note that for all experiments on OR-QuAC, we first train a QPP model on the training set of OR-QuAC, and then conduct inference on the test set of OR-QuAC.
+During training, we always train a QPP model to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC.
+There are two reasons.
+First, when training a QPP method to learn to estimate the retrieval quality of T5-based or QuReTeC-based query rewrites+BM25, we need to train the QPP method on the run files of T5-based or QuReTeC-based query rewrites+BM25 on the training set of OR-QuAC. 
+However, [the T5 rewriter](https://huggingface.co/castorini/t5-base-canard) and [QuReTeC](https://github.com/nickvosk/sigir2020-query-resolution) we use in this paper were trained over the queries in the training set of OR-QuAC. 
+Thus it is unreasonable to run them on the training set of OR-QuAC. 
+Second, when training a QPP method to learn to predict the retrieval quality of ConvDR, we still need to train the QPP method on the run file of ConvDR on the training set of OR-QuAC. 
+Because ConvDR was trained on the training set of OR-QuAC, there would be a great shift between the run files of ConvDR on the training set and the test set of OR-QuAC. 
+Thus, it is also unreasonable to train a QPP method based on the run file of ConvDR on the training set of OR-QuAC.
+So we always train a QPP method to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC.
+
+Note that all experiments on CAsT-19 and CAsT-20 are conducted using 5-fold cross-validation.
 
 #### NQAQPP on OR-QuAC  
 Use the following command to train NQAQPP to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC in terms of nDCG@3:
@@ -611,9 +625,10 @@ python -u ./supervisedQPP/NQAQPP/main.py \
 --epoch_num 1  \
 --interval 1000
 ```
-The training process would produce checkpoints, which are stored in `./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/`. `--target_metric` can be set to "ndcg@3", "ndcg@100" or "recall@100"; This variable would not impact qppBERTPL during training.
+The training process would produce checkpoints, which are stored in `./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/`. 
+`--target_metric` can be set to "ndcg@3", "ndcg@100" or "recall@100"; This variable would not impact qppBERTPL during training.
 
-Use the following commands to run NQAQPP to estimate the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25 and human-written+BM25 on the test set of OR-QuAC:
+After training, use the following commands to run NQAQPP to estimate the retrieval quality of T5-based, QuReTeC-based and human-written query rewrites+BM25 on the test set of OR-QuAC:
 ```bash
 python -u ./supervisedQPP/NQAQPP/main.py \
 --checkpoint_name or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3 \
@@ -657,9 +672,14 @@ python -u ./supervisedQPP/NQAQPP/main.py \
 --interval 1000 \
 --mode inference
 ```
-The output files of NQAQPP would be saved in the path `./output/post-retrieval/`. The output file would include ```qid \t predicted performance``` per line.
+The output files of NQAQPP would be saved in the path `./output/post-retrieval/`. 
+The output file would include ```qid \t predicted performance``` per line.
+`--checkpoint_name` shows the saved checkpoints to be inferred.
 Please make sure the value of `--target_metric` is consistent with the one used during training.
+For example, if `--checkpoint_name` is `or-quac-train.manual-bm25-1000.manual-NQAQPP-recall@100`, which means that the model is trained to approximate the values of Recall@100 during training, `--target_metric` should be set to `recall@100`.
 
+ConvDR has a specially-trained query encoder to encode raw utterances. 
+QPP methods designed for ad-hoc search do not have a special module to understand raw utterances.
 When estimating the retrieval quality of ConvDR, we consider three types of inputs to a QPP method to help the QPP method understand the current query, namely T5-based, QuReTeC-based and human-written query rewrites.
 Use the following commands to run NQAQPP to estimate the retrieval quality of ConvDR on the test set of OR-QuAC:
 ```bash
@@ -707,7 +727,7 @@ python -u ./supervisedQPP/NQAQPP/main.py \
 ```
 
 #### BERTQPP on OR-QuAC
-Use the following command to train BERTQPP to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC in terms of nDCG@3:
+Likewise, use the following command to train BERTQPP to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC in terms of nDCG@3:
 ```bash
 python -u ./supervisedQPP/BERTQPP/main.py \
 --checkpoint_path ./checkpoint/ \
@@ -723,7 +743,7 @@ python -u ./supervisedQPP/BERTQPP/main.py \
 ```
 The training process would produce checkpoints, which are stored in `./checkpoint/or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3/`.
 
-Use the following commands to run BERTQPP to estimate the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25 and human-written+BM25 on the test set of OR-QuAC:
+After training, use the following commands to run BERTQPP to estimate the retrieval quality of T5-based, QuReTeC-based and human-written query rewrites+BM25 on the test set of OR-QuAC:
 ```bash
 python -u ./supervisedQPP/BERTQPP/main.py \
 --checkpoint_name or-quac-train.manual-bm25-1000.manual-BERTQPP-ndcg@3 \
@@ -815,7 +835,7 @@ python -u ./supervisedQPP/BERTQPP/main.py \
 ```
 
 #### qppBERTPL on OR-QuAC
-Use the following command to train qppBERTPL to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC in terms of nDCG@3:
+Likewise, use the following command to train qppBERTPL to estimate the retrieval quality of BM25 with human-rewritten queries on the training set of OR-QuAC in terms of nDCG@3:
 ```bash
 python -u ./supervisedQPP/qppBERTPL/main.py \
 --checkpoint_path ./checkpoint/ \
@@ -828,9 +848,10 @@ python -u ./supervisedQPP/qppBERTPL/main.py \
 --epoch_num 1  \
 --interval 1000
 ```
-The training process would produce checkpoints, which are stored in `./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/`. Note that qppBERTPL does not need to be assigned a target metric. 
+The training process would produce checkpoints, which are stored in `./checkpoint/or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification/`. 
+Note that qppBERTPL does not need to be assigned a target metric. 
 
-Use the following commands to run qppBERTPL to estimate the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25 and human-written+BM25 on the test set of OR-QuAC:
+After training, use the following commands to run qppBERTPL to estimate the retrieval quality of T5-based, QuReTeC-based and human-written query rewrites+BM25 on the test set of OR-QuAC:
 ```bash
 python -u ./supervisedQPP/qppBERTPL/main.py \
 --checkpoint_name or-quac-train.manual-bm25-1000.manual-qppBERTPL-classification \
@@ -916,7 +937,7 @@ python -u ./supervisedQPP/qppBERTPL/main.py \
 ```
 
 #### Assessing BM25 by NQAQPP on CAsT-19
-Use the following commands to train NQAQPP in the setting of estimating the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25 and human-written+BM25 on CAsT-19 in terms of nDCG@3:
+Use the following commands to train NQAQPP in the setting of estimating the retrieval quality of T5-based, QuReTeC-based and human-written query rewrites+BM25 on CAsT-19 in terms of nDCG@3:
 ```bash
 python -u ./supervisedQPP/NQAQPP/main.py \
 --checkpoint_path ./checkpoint/ \
@@ -963,13 +984,17 @@ python -u ./supervisedQPP/NQAQPP/main.py \
 # --warm_up_path ./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@3/1.pkl \
 # --mode inference
 ```
-The above commands would train NQAQPP using 5-fold cross-validation. 
-`--warm_up_path` shows the path to the checkpoint pre-trained on the training set of OR-QuAC. Note that one can activate `--warm_up_path`, which would fine-turn the checkpoint of NQAQPP pre-trained on the training set of OR-QuAC (warm-up). We found that fine-tuning the checkpoint pre-trained for one epoch on the training set of OR-QuAC gets better performance. Please make sure the target metric used during 5-fold cross-validation and the one used during pre-training on OR-QuAC are the same. 
+The above commands would train NQAQPP from scratch using 5-fold cross-validation. 
+`--warm_up_path` shows the path to the checkpoint pre-trained on the training set of OR-QuAC. 
+Note that one can activate `--warm_up_path`, which would fine-turn the checkpoint of NQAQPP pre-trained on the training set of OR-QuAC (warm-up) instead of just learning from scratch. 
+We found that fine-tuning the checkpoint pre-trained for one epoch on the training set of OR-QuAC gets better performance. 
+Please make sure the target metric used during 5-fold cross-validation and the target metric used during pre-training on OR-QuAC are the same. 
 For example, if warm up NQAQPP from `./checkpoint/or-quac-train.manual-bm25-1000.manual-NQAQPP-ndcg@100/1.pkl`, one should set `--target_metric` as `ndcg@100`.
 After training, activate `--mode inference` and execute the above command again to conduct inference; The inference process produces predicted performance files, which would be saved in the path `./output/post-retrieval/`.
 
-
 #### Assessing ConvDR by NQAQPP on CAsT-19
+ConvDR has a specially-trained query encoder to encode raw utterances. 
+QPP methods designed for ad-hoc search do not have a special module to understand raw utterances.
 When estimating the retrieval quality of ConvDR, we consider three types of inputs to a QPP method to help the QPP method understand the current query, namely T5-based, QuReTeC-based and human-written query rewrites.
 Similarly, use the following commands to train NQAQPP to estimate the retrieval quality of ConvDR on CAsT-19 in terms of nDCG@3:
 ```bash
@@ -1020,7 +1045,7 @@ python -u ./supervisedQPP/NQAQPP/main.py \
 ```
 
 #### Assessing BM25 by BERTQPP on CAsT-19
-Similarly, use the following commands to train BERTQPP in the setting of estimating the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25 and human-written+BM25 on CAsT-19 in terms of nDCG@3:
+Similarly, use the following commands to train BERTQPP in the setting of estimating the retrieval quality of T5-based, QuReTeC-based and human-written query rewrites+BM25 on CAsT-19 in terms of nDCG@3:
 ```bash
 python -u ./supervisedQPP/BERTQPP/main.py \
 --checkpoint_path ./checkpoint/ \
@@ -1118,7 +1143,7 @@ python -u ./supervisedQPP/BERTQPP/main.py \
 ```
 
 #### Assessing BM25 by qppBERTPL on CAsT-19
-Similarly, use the following commands to train qppBERTPL in the setting of estimating the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25 and human-written+BM25 on CAsT-19 in terms of nDCG@3:
+Similarly, use the following commands to train qppBERTPL in the setting of estimating the retrieval quality of T5-based, QuReTeC-based and human-written query rewrites+BM25 on CAsT-19 in terms of nDCG@3:
 ```bash
 python -u ./supervisedQPP/qppBERTPL/main.py \
 --checkpoint_path ./checkpoint/ \
@@ -1495,7 +1520,7 @@ python -u ./supervisedQPP/qppBERTPL/main.py \
 ### Evaluation for Post-retrieval QPP Methods
 The following commands are about evaluating all post-retrieval QPP methods in terms of Pearson's 𝜌, Kendall's 𝜏, and Spearman's 𝜌 correlation coefficients.
 #### CAsT-19
-Use the following command to evaluate QPP methods when they estimate the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25, human-written query rewrites+BM25 and ConvDR on CAsT-19:
+Use the following commands to evaluate QPP methods when they estimate the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25, human-written query rewrites+BM25 and ConvDR on CAsT-19:
 ```bash
 python -u evaluation_QPP.py \
 --pattern './output/post-retrieval/cast-19.T5-Q-bm25-1000.*' \
@@ -1517,7 +1542,9 @@ python -u evaluation_QPP.py \
 --ap_path ./datasets/cast-19-20/actual_performance/cast-19.actual-performance-run-ConvDR-1000.json \
 --target_metrics ndcg@3 
 ```
-```target_metric``` here can be set to "ndcg@3", "ndcg@100" or "recall@100". The files showing the evaluation results would be saved in the path `./output/post-retrieval/`. 
+```target_metric``` here can be set to "ndcg@3", "ndcg@100" or "recall@100". 
+The files showing the evaluation results would be saved in the path `./output/post-retrieval/`. 
+Note that when evaluating regression-based supervised QPP methods, such as NQAQPP and BERTQPP, make sure the target metric set here is consistent with the target metric in terms of which regression-based supervised methods are trained to estimate the retrieval quality during training.
 
 #### CAsT-20
 Likewise, Use the following command to evaluate QPP methods when they estimate the retrieval quality of T5-based query rewrites+BM25, QuReTeC-based query rewrites+BM25, human-written query rewrites+BM25 and ConvDR on CAsT-20:
