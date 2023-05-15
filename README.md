@@ -1,11 +1,11 @@
 # Query Performance Prediction for Conversational Search (QPP4CS) 
-![visitors](https://visitor-badge.glitch.me/badge?page_id=AGI-Edgerunners/QPP4CS)
- 
+![](https://api.visitorbadge.io/api/VisitorHit?user=estruyf&repo=github-visitors-badge&countColor=%237B1E7A)
+
 This is the repository for the papers:
 - [Query Performance Prediction: From Ad-hoc to Conversational Search]() (SIGIR 2023)
-- [Performance Prediction for Conversational Search Using Perplexities of Query Rewrites](http://ceur-ws.org/Vol-3366/#paper-05) (QPP++ 2023).
+- [Performance Prediction for Conversational Search Using Perplexities of Query Rewrites](http://ceur-ws.org/Vol-3366/#paper-05) (QPP++ 2023)
 
-Please cite our papers if you think this repository is helpful: 
+We kindly ask you to cite our papers if you find this repository useful: 
 ```
 @inproceedings{meng2023query,
  author = {Meng, Chuan and Arabzadeh, Negar and Aliannejadi, Mohammad and de Rijke, Maarten},
@@ -42,13 +42,14 @@ This repository allows the replication of all results reported in the papers. In
   - [Evaluation for post-retrieval QPP methods](#Evaluation-for-post-retrieval-QPP-methods)
 - [Plots](#Plots)
 
+Note that for ease of use, we already uploaded the predicted performance files for all QPP methods reported in our paper. See [here](./results_in_papers). 
 
 ## Prerequisites
 We recommend running all the things in a Linux environment. 
 Please create a conda environment with all required packages, and activate the environment by the following commands:
 ```
 $ conda env create -f environment.yaml
-$ conda activate QPP-CS
+$ conda activate QPP4CS
 ```
 
 ## Data Preparation
@@ -297,7 +298,7 @@ python -u evaluation_retrieval.py --run datasets/or-quac/runs/or-quac-train.run-
 Through the above command, we get the actual performance file **or-quac-train.actual-performance-run-manual-bm25-1000.json** in `./datasets/or-quac/actual_performance`.
 
 ## Replicating Results
-> For ease of use, we already uploaded the predicted performance files for all QPP methods reported in our paper. See [here](./predicted_performance_in_tables). 
+> For ease of use, we already uploaded the predicted performance files for all QPP methods reported in our paper. See [here](./results_in_papers). 
 
 ### Pre-retrieval QPP methods
 #### Precomputation
