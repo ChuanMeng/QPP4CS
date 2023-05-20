@@ -2,7 +2,7 @@
 ![](https://api.visitorbadge.io/api/VisitorHit?user=ChuanMeng&repo=QPP4CS&countColor=%237B1E7A)
 
 This is the repository for the papers:
-- [Query Performance Prediction: From Ad-hoc to Conversational Search]() (SIGIR 2023)
+- [Query Performance Prediction: From Ad-hoc to Conversational Search](https://arxiv.org/abs/2305.10923) (SIGIR 2023)
 - [Performance Prediction for Conversational Search Using Perplexities of Query Rewrites](https://ceur-ws.org/Vol-3366/paper-05.pdf) (QPP++ 2023)
 
 We kindly ask you to cite our papers if you find this repository useful: 
