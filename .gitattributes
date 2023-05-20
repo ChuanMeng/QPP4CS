@@ -1,1 +1,2 @@
-./results_in_papers/* linguist-documentation
+* linguist-vendored
+*.py linguist-vendored=false
