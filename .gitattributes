@@ -1,4 +1,4 @@
-./results_in_papers/ECIR2023/Table_1/* linguist-language=text
-./results_in_papers/SIGIR2023/Table_3/* linguist-language=text
-./results_in_papers/SIGIR2023/Table_4/* linguist-language=text
-./results_in_papers/SIGIR2023/Table_5/* linguist-language=text
+./results_in_papers/ECIR2023/Table_1/* linguist-vendored
+./results_in_papers/SIGIR2023/Table_3/* linguist-vendored
+./results_in_papers/SIGIR2023/Table_4/* linguist-vendored
+./results_in_papers/SIGIR2023/Table_5/* linguist-vendored
