@@ -5,6 +5,8 @@ This is the repository for the papers:
 - [Query Performance Prediction: From Ad-hoc to Conversational Search](https://arxiv.org/abs/2305.10923) (SIGIR 2023)
 - [Performance Prediction for Conversational Search Using Perplexities of Query Rewrites](https://ceur-ws.org/Vol-3366/paper-05.pdf) (QPP++ 2023)
 
+The repository offers the implementation of a comprehensive collection of pre- and post-retrieval query performance prediction (QPP) methods, all integrated within a unified Python/Pytorch framework. It would be an ideal package for anyone interested in conducting research into QPP for ad-hoc or conversational search.
+
 We kindly ask you to cite our papers if you find this repository useful: 
 ```
 @inproceedings{meng2023query,
