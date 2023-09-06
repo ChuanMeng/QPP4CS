@@ -2,7 +2,7 @@
 ![](https://api.visitorbadge.io/api/VisitorHit?user=ChuanMeng&repo=QPP4CS&countColor=%237B1E7A)
 
 This is the repository for the papers:
-- [Query Performance Prediction: From Ad-hoc to Conversational Search](https://arxiv.org/abs/2305.10923) (SIGIR 2023)
+- [Query Performance Prediction: From Ad-hoc to Conversational Search](https://dl.acm.org/doi/abs/10.1145/3539618.3591919) (SIGIR 2023)
 - [Performance Prediction for Conversational Search Using Perplexities of Query Rewrites](https://ceur-ws.org/Vol-3366/paper-05.pdf) (QPP++ 2023)
 
 The repository offers the implementation of a comprehensive collection of pre- and post-retrieval query performance prediction (QPP) methods, all integrated within a unified Python/Pytorch framework. It would be an ideal package for anyone interested in conducting research into QPP for ad-hoc or conversational search.
@@ -12,8 +12,11 @@ We kindly ask you to cite our papers if you find this repository useful:
 @inproceedings{meng2023query,
  author = {Meng, Chuan and Arabzadeh, Negar and Aliannejadi, Mohammad and de Rijke, Maarten},
  title = {Query Performance Prediction: From Ad-hoc to Conversational Search},
- booktitle = {SIGIR 2023: The 46th international ACM SIGIR Conference on Research and Development in Information Retrieval},
+ booktitle = {Proceedings of the 46th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+ pages = {2583–2593},
  year = {2023},
+ url = {https://doi.org/10.1145/3539618.3591919},
+ doi = {10.1145/3539618.3591919},
 }
 
 @inproceedings{meng2023Performance,
