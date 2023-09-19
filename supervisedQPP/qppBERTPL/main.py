@@ -1,4 +1,4 @@
-﻿import sys
+import sys
 sys.path.append('./')
 import json
 import torch
@@ -34,7 +34,7 @@ def training(args):
 
         for i in range(last_epoch+1, args.epoch_num+1):
             driver.training(dataset, collate_fn, i, model_optimizer)
-            driver.serialize(checkpoint_path,i)
+            driver.serialize(args.checkpoint_path_,i)
     else:
         for fold_id_inference in range(1, args.fold_num + 1):
             fold_ids_training = [j for j in range(1, args.fold_num + 1) if j != fold_id_inference]
